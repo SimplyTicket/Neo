@@ -1,6 +1,7 @@
 
 upload/*
 node_modules/*
+public/*
 *.old
 *.js
 *.map

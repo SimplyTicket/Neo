@@ -4,7 +4,7 @@ import path from "path";
 export default defineConfig({
 	root: path.resolve(__dirname),
 	build: {
-		outDir: path.resolve(__dirname, "./upload"),
+		outDir: path.resolve(__dirname, "./public"),
 		emptyOutDir: true,
 		sourcemap: true,
 		minify: "esbuild",
