@@ -1,0 +1,129 @@
+// sass scss/* css/output.css
+@use 'sass:meta';
+
+$directions: (
+  t: top,
+  s: left,
+  b: bottom,
+  e: right,
+  x: (left, right),
+  y: (top, bottom)
+);
+
+:root {
+	--spacing: 8px;
+}
+
+@for $i from 0 through 5 {
+
+  .m-#{$i} {
+    margin: calc(var(--spacing) * #{$i});
+  }
+
+  .p-#{$i} {
+    padding: calc(var(--spacing) * #{$i});
+  }
+
+	@each $direction, $value in $directions {
+		.m#{$direction}-#{$i} {
+			@if meta.type-of($value) == "list" {
+				@each $v in $value {
+					margin-#{$v}: calc(var(--spacing) * #{$i});
+				}
+			} @else {
+				margin-#{$value}: calc(var(--spacing) * #{$i});
+			}
+		}
+
+		.p#{$direction}-#{$i} {
+			@if meta.type-of($value) == "list" {
+				@each $v in $value {
+					padding-#{$v}: calc(var(--spacing) * #{$i});
+				}
+			} @else {
+				padding-#{$value}: calc(var(--spacing) * #{$i});
+			}
+		}
+	}
+}
+
+// $flex-directions: (
+// 	row: row,
+// 	column: column
+// );
+
+// $justify-content: (
+// 	start: flex-start,
+// 	center: center,
+// 	end: flex-end,
+// 	around: space-around,
+// 	between: space-between
+// );
+
+// $align-items: (
+// 	start: flex-start,
+// 	center: center,
+// 	end: flex-end,
+// 	stretch: stretch
+// );
+
+// @each $direction, $value in $flex-directions {
+// 	.flex-#{$direction} {
+// 		display: flex;
+// 		flex-direction: #{$value};
+// 	}
+// }
+
+// @each $justify, $justify-value in $justify-content {
+// 	.justify-content-#{$justify} {
+// 		display: flex;
+// 		justify-content: #{$justify-value};
+// 	}
+// }
+
+// @each $align, $align-value in $align-items {
+// 	.align-items-#{$align} {
+// 		display: flex;
+// 		align-items: #{$align-value};
+// 	}
+// }
+
+// $breakpoints: (
+//   sm: 576px,
+//   md: 768px,
+//   lg: 992px,
+//   xl: 1200px,
+//   xxl: 1400px
+// );
+
+// @each $breakpoint, $min-width in $breakpoints {
+//   @media (min-width: #{$min-width}) {
+//     @for $i from 1 through 12 {
+//       .col-#{$breakpoint}-#{$i} {
+//         flex: 0 0 auto;
+//         width: calc(100% * (#{$i} / 12));
+//       }
+//     }
+//   }
+// }
+
+// // Pour les colonnes par défaut (xs)
+// @for $i from 1 through 12 {
+//   .col-#{$i} {
+//     flex: 0 0 auto;
+//     width: calc(100% * (#{$i} / 12));
+//   }
+// }
+
+.display-none {
+	display: none;
+}
+
+.text-center {
+	text-align: center;
+}
+
+
+.w-100 {
+	width: 100%;
+}

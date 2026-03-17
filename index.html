@@ -1,0 +1,128 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta
+			http-equiv="Content-Security-Policy"
+			content="default-src 'self'; style-src 'self' 'unsafe-inline' data:;"
+		/>
+		<title>The web site of simply-ticket</title>
+		<!-- The style.css file allows you to change the look of your web pages.
+         If you include the next line in all your web pages, they will all share the same look.
+         This makes it easier to make new pages for your site. -->
+		<link href="css/style.css" rel="stylesheet" type="text/css" media="all" />
+		<link href="css/output.css" rel="stylesheet" type="text/css" media="all" />
+		<link
+			href="css/particules/coffee.css"
+			rel="stylesheet"
+			type="text/css"
+			media="all"
+		/>
+
+		<link
+			href="css/bootstrap/bootstrap-grid.css"
+			rel="stylesheet"
+			type="text/css"
+			media="all"
+		/>
+		<link
+			href="css/bootstrap/bootstrap-utilities.css"
+			rel="stylesheet"
+			type="text/css"
+			media="all"
+		/>
+		<link rel="stylesheet" href="css/particules/star.css" />
+	</head>
+	<body>
+		<div class="container align-items-center flex-column">
+			<h1 class="p-1 text-center">Bonjour, i'm ticket</h1>
+			<div class="row" id="frameRate"></div>
+
+			<div class="row g-3">
+				<div class="col-12 col-lg-4 flex-column d-flex">
+					<div class="cool-border bg-dark-50 align-self-stretch p-2">
+						<h3 class="ms-2">What am I ?</h3>
+						<p>
+							It's a hard question, honestly... <br />
+							I'm calculateAge("21-12-2003")
+						</p>
+						<p>
+							I just knows that i generally feel different than others got some
+							kind of autism or a shit like that <br />
+							And pretty messed up as a kid <small>It may explain a lot</small>
+						</p>
+						<p>
+							To be honest i don't really knows what to say here, i'm curious to
+							know what you want from me <br />
+							PLS email me here : <br />
+							<a href="mailto:dynastie_biopic.5l@icloud.com"
+								>dynastie_biopic.5l@icloud.com</a
+							>
+						</p>
+						<div class="coffee"></div>
+					</div>
+				</div>
+				<div class="col-12 col-lg-8 d-flex">
+					<div class="cool-border bg-dark-50 align-self-stretch p-2">
+						<div>
+							<h3 class="ms-2">- What is this</h3>
+							<p>
+								A place where i can also feel like home, I can feel safe, just
+								chilling alone floating peacefully in space, <br />
+								And where i can makes mistakes and don'ty have any one saying
+								anything to me :p
+							</p>
+						</div>
+						<div>
+							<h3 class="ms-2">- My inspiration</h3>
+							<p>These are oddly specific idk why</p>
+							<ul>
+								<li>The observatory in mario galaxy</li>
+								<li>The space core in Portal 2</li>
+								<li>
+									The marathon trailer !
+									<small
+										>OMG i can't have it out of my head but the game will be
+										terrible</small
+									>
+								</li>
+								<li>Kittens :3</li>
+								<li>Undertail</li>
+							</ul>
+						</div>
+						<div class="">
+							<h3 class="ms-2">- Next</h3>
+							<p>
+								I want to connect to i mood, add random kitten from my cute
+								kitty gallery (with a vote maybe) and a small chat to have a bit
+								of interaction
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row gx-3 mt-2">
+				<div  class="col-12">
+					<div class="cool-border bg-dark-50">
+						<div class="m-1">
+							<p class="mt-0">I have no idea of what i'm doing here...</p>
+							<p class="mb-0 display-none"></p>
+						</div>
+						<div class="d-flex justify-content-between col-12">
+							<button class="moove-btn" id="previous">◄ Previous</button>
+							<button class="moove-btn" id="next">Next ►</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+		<canvas class="relative" id="sun" width="800" height="800"></canvas>
+		<canvas class="relative" id="starBg" width="" height=""></canvas>
+
+		<div id="particulContainer"></div>
+	</body>
+	<!-- Si ton fichier est dans `/js/main.js` : -->
+	<script type="module" src="/ts/main.ts"></script>
+</html>
