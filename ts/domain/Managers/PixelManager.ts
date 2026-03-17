@@ -11,12 +11,47 @@ export interface PixelManagerInterface {
 }
 
 export default class PixelManager implements PixelManagerInterface {
+	static instances: PixelManager[] = [];
+
 	protected pixelSize: number = 10;
 
-	constructor(protected ctx: CanvasRenderingContext2D) {}
+	constructor(
+		protected ctx: CanvasRenderingContext2D,
+		protected canvas: HTMLCanvasElement,
+	) {
+		PixelManager.instances.push(this);
+	}
+
+	getCanvasHeight(): number {
+		return Math.trunc(this.canvas.height / this.pixelSize);
+	}
+
+	getCanvasWidth(): number {
+		return Math.trunc(this.canvas.width / this.pixelSize);
+	}
+
+	resize() {
+		// const dpr = window.devicePixelRatio || 1;
+		const dpr = 1;
+
+		const width = window.innerWidth;
+		const height = window.innerHeight;
+
+		this.canvas.style.width = width + "px";
+		this.canvas.style.height = height + "px";
+
+		this.canvas.width = Math.floor(width * dpr);
+		this.canvas.height = Math.floor(height * dpr);
+
+		this.ctx.imageSmoothingEnabled = false;
+	}
 
 	getCtx(): CanvasRenderingContext2D {
 		return this.ctx;
+	}
+
+	getCanvas(): HTMLCanvasElement {
+		return this.canvas;
 	}
 
 	drawPixel(position: Position, color?: string) {

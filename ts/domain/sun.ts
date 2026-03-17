@@ -5,9 +5,10 @@ import PixelManager, {
 import Perlin from "./Noise/PerlinNoise.js";
 
 export class Sun extends PixelManager {
-	protected canvas: HTMLCanvasElement;
 	private noise = new Perlin();
 	private time = 0;
+	private position: Position = { x: 0, y: 0 };
+
 	lastSunUpdate: number = 0;
 
 	constructor(private size: number) {
@@ -18,27 +19,25 @@ export class Sun extends PixelManager {
 		} else {
 			throw new Error("Element with id 'sun' not found.");
 		}
-		super(ctx);
-		this.canvas = canvas;
+		super(ctx, canvas);
 		this.ctx.fillStyle = "white";
+		addEventListener("resize", () => {
+			this.resize();
+		});
+
 		this.resize();
 	}
 
-	resize(size: number = this.size) {
+	updateSize(size: number = this.size) {
 		this.size = size;
-		// const dpr = window.devicePixelRatio || 1;
-		// const width = this.size * this.pixelSize;
-		// const height = this.size * this.pixelSize;
-
-		// this.canvas.style.width = width + "px";
-		// this.canvas.style.height = height + "px";
-
-		// this.canvas.width = Math.floor(width * dpr);
-		// this.canvas.height = Math.floor(height * dpr);
 	}
 
 	getSize() {
 		return this.size;
+	}
+
+	getPosition() {
+		return this.position;
 	}
 
 	drawPixel(
@@ -51,7 +50,8 @@ export class Sun extends PixelManager {
 			const temperature = this.getTemperature(position);
 
 			// Calculer les composantes RGB en fonction de la température
-			const r = 100 + Math.floor(155 * Math.max(temperature + Math.random(), 1)); // Rouge entre 200 et 255
+			const r =
+				100 + Math.floor(155 * Math.max(temperature + Math.random(), 1)); // Rouge entre 200 et 255
 			const g = 30 + Math.floor(10 * Math.random() + 130 * temperature); // Vert entre 50 et 155
 
 			let b;
@@ -66,6 +66,8 @@ export class Sun extends PixelManager {
 
 			color = `rgba(${r}, ${g}, ${b}, ${opacity ?? 1})`;
 		}
+		position.x = Math.floor(position.x);
+		position.y = Math.floor(position.y);
 		super.drawPixel(position, color);
 	}
 
@@ -104,7 +106,7 @@ export class Sun extends PixelManager {
 
 		const ray = new SunRayDecorateur(this);
 
-		ray.filledCircle({ x: 0, y: 0 }, this.size / 2);
+		ray.filledCircle(this.position, this.size / 2);
 		this.addTime(this.lastSunUpdate * 0.4); // Adjust time progression speed based on delta time
 		this.lastSunUpdate = 0;
 	}
@@ -112,11 +114,16 @@ export class Sun extends PixelManager {
 	drawCircle(center: { x: number; y: number }, radius: number) {
 		super.drawCircle(center, radius);
 	}
+
+	updatePosition(position: { x: number; y: number }) {
+		this.position = position;
+	}
+
 }
 
 class SunRayDecorateur extends PixelManager {
 	constructor(private sun: Sun) {
-		super(sun.getCtx());
+		super(sun.getCtx(), sun.getCanvas());
 	}
 
 	drawPixel(position: Position, color?: string): void {
@@ -127,11 +134,15 @@ class SunRayDecorateur extends PixelManager {
 
 		for (let i = 0; i < additionalPixels; i++) {
 			const angle = Math.random() * 2 * Math.PI;
-			const distance = Math.random() * temp * this.sun.getSize() / 16; // More distance for higher temperatures
+			const distance = (Math.random() * temp * this.sun.getSize()) / 16; // More distance for higher temperatures
 			const rayX = position.x + Math.cos(angle) * distance;
 			const rayY = position.y + Math.sin(angle) * distance;
 
-			this.sun.drawPixel({ x: Math.floor(rayX), y: Math.floor(rayY) }, color, Math.min(temp + 0.2, 0.8)); // Ray pixels with lower opacity
+			this.sun.drawPixel(
+				{ x: Math.floor(rayX), y: Math.floor(rayY) },
+				color,
+				Math.min(temp + 0.2, 0.8),
+			); // Ray pixels with lower opacity
 		}
 
 		this.sun.drawPixel(position, color);

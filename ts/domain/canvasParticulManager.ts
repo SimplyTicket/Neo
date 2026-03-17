@@ -46,8 +46,9 @@ export class canvasParticulManager {
 		})
 	}
 
-	private resize(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
-		const dpr = window.devicePixelRatio || 1;
+	resize(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
+		// const dpr = window.devicePixelRatio || 1;
+		const dpr = 1;
 
 		const width = window.innerWidth;
 		const height = window.innerHeight;

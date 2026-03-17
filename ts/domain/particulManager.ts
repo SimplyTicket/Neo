@@ -1,7 +1,6 @@
 
-import { Particle } from "./particle";
-import { HtmlStar } from "./stars";
-import { DisplayManager } from "./displayManager";
+import { Particle } from "./particle.js";
+import { HtmlStar } from "./stars.js";
 export class ParticulManager {
 	private maxParticuls: number = 13000;
 	private particuls: Particle[] = [];
