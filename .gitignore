@@ -1,0 +1,8 @@
+
+upload/*
+node_modules/*
+*.old
+*.js
+*.map
+.vscode/*
+.DS_Store
