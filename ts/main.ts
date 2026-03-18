@@ -91,8 +91,23 @@ function testCamera() {
 	addEventListener("click", (e) => {
 		const clickPosition = PixelManager.getPositionFromRealPosition({ x: e.clientX, y: e.clientY });
 
-		sunInstance.moveSunToCam(clickPosition, 30, 1000);
+		sunInstance.moveSunToCam(clickPosition, camera.getZoom(), 1000);
 	});
+
+	let lastScrollY = window.scrollY;
+	document.addEventListener("scroll", (event) => {
+		const scroolDiff = window.scrollY - lastScrollY;
+
+		camera.mooveCamera({ x: 0, y: scroolDiff * 3 });
+		lastScrollY = window.scrollY;
+
+
+
+
+	});
+
+
+
 
 	// annim
 	// .animate(3000, new EaseInOutEasing(), (t) => {

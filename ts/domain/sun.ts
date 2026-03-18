@@ -143,6 +143,7 @@ export class Sun extends Drawable {
 }
 
 class SunRayDecorateur extends PixelManager {
+
 	constructor(private sun: Sun) {
 		super(sun.getCtx(), sun.getCanvas());
 	}
@@ -155,7 +156,7 @@ class SunRayDecorateur extends PixelManager {
 
 		for (let i = 0; i < additionalPixels; i++) {
 			const angle = Math.random() * 2 * Math.PI;
-			const distance = (Math.random() * temp * this.sun.getSize()) / 16; // More distance for higher temperatures
+			const distance = (Math.random() * temp * this.sun.getSize()) / 8; // More distance for higher temperatures
 			const rayX = position.x + Math.cos(angle) * distance;
 			const rayY = position.y + Math.sin(angle) * distance;
 
