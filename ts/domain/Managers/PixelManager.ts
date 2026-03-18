@@ -1,6 +1,7 @@
 export interface Position {
 	x: number;
 	y: number;
+	z?: number;
 }
 
 export interface PixelManagerInterface {
@@ -10,10 +11,10 @@ export interface PixelManagerInterface {
 	filledCircle(center: Position, radius: number): void;
 }
 
-export default class PixelManager implements PixelManagerInterface {
+export default abstract class PixelManager implements PixelManagerInterface {
 	static instances: PixelManager[] = [];
 
-	protected pixelSize: number = 10;
+	protected pixelSize: number = 7;
 
 	constructor(
 		protected ctx: CanvasRenderingContext2D,
@@ -147,6 +148,47 @@ export default class PixelManager implements PixelManagerInterface {
 				});
 			}
 		}
+	}
+
+	static getPositionFromRealPosition(
+		position: { x: number; y: number },
+	): Position {
+		return {
+			x: Math.round(position.x / this.instances[0].pixelSize),
+			y: Math.round(position.y / this.instances[0].pixelSize),
+		};
+	}
+}
+
+export abstract class Drawable extends PixelManager {
+	protected position: Position;
+	protected size: number;
+
+	constructor(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, size: number, position: Position) {
+		super(ctx, canvas);
+		this.size = size;
+		this.position = position;
+	}
+
+	updatePosition(position: Position) {
+		// this.position = position;
+		this.position = {
+			x: position.x,
+			y: position.y,
+			z: position.z !== undefined ? position.z : this.position.z,
+		};
+	}
+
+	updateSize(size: number) {
+		this.size = size;
+	}
+
+	getPosition(): Position {
+		return this.position;
+	}
+
+	getSize(): number {
+		return this.size;
 	}
 }
 

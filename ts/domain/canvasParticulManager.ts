@@ -1,5 +1,6 @@
+import Star from "./bg/stars.js";
 import { CanvasStar } from "./canvasStar.js";
-import { Particle } from "./particle.js";
+import { Particle, ParticleInterface } from "./particle.js";
 
 export enum DirectionEnum {
 	UP = "UP",
@@ -19,10 +20,10 @@ export class canvasParticulManager {
 	private static instance: canvasParticulManager;
 	public canvas: HTMLCanvasElement;
 	private ctx: CanvasRenderingContext2D;
-	private particles: Particle[] = [];
+	private particles: ParticleInterface[] = [];
 	private lastTime: number = 0;
 	private timeSinceLastStar: number = 0;
-	private maxParticuls = 60;
+	private maxParticuls = 60 * 3;
 	public activParticuls: boolean = true;
 
 	private constructor(canvasId: string = "starBg") {
@@ -72,7 +73,7 @@ export class canvasParticulManager {
 		return canvasParticulManager.instance;
 	}
 
-	addParticle(particle: Particle): void {
+	addParticle(particle: ParticleInterface): void {
 		this.particles.push(particle);
 	}
 
@@ -80,7 +81,7 @@ export class canvasParticulManager {
 		return this.particles
 	}
 
-	removeParticle(particle: Particle): void {
+	removeParticle(particle: ParticleInterface): void {
 		const index = this.particles.indexOf(particle);
 		if (index !== -1) {
 			this.particles.splice(index, 1);
@@ -95,14 +96,21 @@ export class canvasParticulManager {
 		});
 
 		// One new star every 0.1 second
-		this.timeSinceLastStar = (this.timeSinceLastStar || 0) + dt;
-		if (
-			this.activParticuls &&
-			this.timeSinceLastStar >= 0.1 &&
-			this.particles.length < this.maxParticuls
-		) {
-			this.addParticle(new CanvasStar(this, undefined, this.ctx));
-			this.timeSinceLastStar = 0;
+		// this.timeSinceLastStar = (this.timeSinceLastStar || 0) + dt;
+		// if (
+		// 	this.activParticuls &&
+		// 	this.timeSinceLastStar >= 0.1 &&
+		// 	this.particles.length < this.maxParticuls
+		// ) {
+		// 	this.addParticle(new CanvasStar(this, undefined, this.ctx));
+		// 	this.timeSinceLastStar = 0;
+		// }
+
+	}
+
+	addStars() {
+		for (let i = 0; i < this.maxParticuls; i++) {
+			this.addParticle(new Star(this.ctx, this.canvas, 1));
 		}
 	}
 }

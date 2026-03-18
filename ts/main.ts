@@ -6,16 +6,19 @@ import AnimationManager, {
 	EaseInOutEasing,
 	LinearEasing,
 } from "./domain/Managers/AnnimationManager.js";
+import CameraManager from "./domain/Managers/CameraManager.js";
+import PixelManager from "./domain/Managers/PixelManager.js";
 
 document.addEventListener("DOMContentLoaded", main);
 
 let lastTime = 0;
 let frameCount = 0;
 let lastSunUpdate = 0;
-const DEBUG = false;
-const particulManager: ParticulManager = ParticulManager.getInstance();
+const DEBUG = true;
 
 const sunInstance = new Sun(128);
+const camera = CameraManager.getInstance();
+camera.addParticul(sunInstance, 50);
 
 function main() {
 	// Init DisplayManager to handle tab visibility and FPS capping
@@ -28,7 +31,12 @@ function main() {
 
 	window.requestAnimationFrame(animate);
 
-	test();
+	// sunInstance.updatePosition({ x: 50, y: 50 });
+
+
+	canvasParticulManager.getInstance().addStars();
+
+	// test();
 }
 
 function animate(currentTime: number) {
@@ -59,82 +67,45 @@ function animate(currentTime: number) {
 	window.requestAnimationFrame(animate);
 }
 
-// For testing propruces, must be deleted
-function test() {
-	setTimeout(() => {
-		const anim = new AnimationManager();
-		const size = sunInstance.getSize();
-		const targetSize = 55;
-		anim
-			.animate(5000, new EaseInOutEasing(), (t) => {
-				const x = lerp(size, targetSize, t);
-				sunInstance.updateSize(x);
-			})
-			.then(() => {
-				sunInstance.updateSize(targetSize);
-			});
+setTimeout(() => {
+	testCamera();
+}, 500);
 
-		const position = sunInstance.getPosition();
-		const targetPosition = {
-			x: sunInstance.getCanvasWidth() - 10,
-			y: (sunInstance.getCanvasHeight() * 3) / 4,
-		};
-		anim
-			.animate(5000, new EaseInOutEasing(), (t) => {
-				const x = lerp(position.x, targetPosition.x, t);
-				const y = lerp(position.y, targetPosition.y, t);
-				sunInstance.updatePosition({ x, y });
-			})
-			.then(() => {
-				sunInstance.updatePosition(targetPosition);
-				nextFrame();
-			});
-	}, 5000);
+function testCamera() {
+	const annim = new AnimationManager();
 
-	function nextFrame() {
-		const anim = new AnimationManager();
-		const size = sunInstance.getSize();
-		const targetSize = 16;
-		anim
-			.animate(5000, new EaseInOutEasing(), (t) => {
-				const x = lerp(size, targetSize, t);
-				sunInstance.updateSize(x);
-			})
-			.then(() => {
-				sunInstance.updateSize(targetSize);
-			});
+	// const position = camera.mooveCameraSoElemIsOn(sunInstance, {x: sunInstance.getCanvasWidth() /2, y: 10}, 30)
+	// camera.setCameraZoom(30);
+	// camera.setCameraPosition(position)
 
-		const position = sunInstance.getPosition();
-		const targetPosition = {
-			x: sunInstance.getCanvasWidth() / 2,
-			y: 10,
-		};
-		anim
-			.animate(5000, new EaseInOutEasing(), (t) => {
-				const x = lerp(position.x, targetPosition.x, t);
-				const y = lerp(position.y, targetPosition.y, t);
-				sunInstance.updatePosition({ x, y });
-			})
-			.then(() => {
-				sunInstance.updatePosition(targetPosition);
-				setInterval(() => {
-					nextFrame();
-				}, 2000);
-			});
-	}
+	// camera.mooveCamera({ x: 2, y: 1 });
+	// camera.setCameraZoom(30);
 
-	// sun.drawLine({ x: 0, y: 0 }, { x: size / 2, y: size / 2 });
-	// sun.drawLine({ x: 32, y: 0 }, { x: size / 2, y: size / 2 });
-	// sun.drawLine({ x: 64, y: 0 }, { x: size / 2, y: size / 2 });
+	sunInstance.moveSunToCam({ x: sunInstance.getCanvasWidth() / 2, y: 10 }, 30, 3000).then(() => {
 
-	// sun.drawLine({ x: 0, y: 32 }, { x: size / 2, y: size / 2 });
-	// sun.drawLine({ x: 64, y: 32 }, { x: size / 2, y: size / 2 });
+			// Move the camera back to its original position and zoom after 2 seconds
+			sunInstance.moveSunToCam({ x: 0, y: 100 }, 30, 1000);
 
-	// sun.drawLine({ x: 0, y: 64 }, { x: size / 2, y: size / 2 });
-	// sun.drawLine({ x: 32, y: 64 }, { x: size / 2, y: size / 2 });
-	// sun.drawLine({ x: 64, y: 64 }, { x: size / 2, y: size / 2 });
+	});
 
-	// sun.drawLine({x:64, y:32}, {x:0, y:0})
+	addEventListener("click", (e) => {
+		const clickPosition = PixelManager.getPositionFromRealPosition({ x: e.clientX, y: e.clientY });
+
+		sunInstance.moveSunToCam(clickPosition, 30, 1000);
+	});
+
+	// annim
+	// .animate(3000, new EaseInOutEasing(), (t) => {
+	// 	camera.setCameraPosition({
+	// 		x: lerp(0, position.x, t),
+	// 		y: lerp(0, position.y, t),
+	// 	});
+	// 		camera.setCameraZoom(lerp(0, 30, t));
+	// 	})
+	// 	.then(() => {
+	// 		setTimeout(() => {
+	// 		}, 2000);
+	// 	});
 }
 
 function lerp(a: number, b: number, t: number) {

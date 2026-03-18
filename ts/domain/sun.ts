@@ -1,17 +1,21 @@
+import AnimationManager, {
+	EaseInOutEasing,
+} from "./Managers/AnnimationManager.js";
+import CameraManager from "./Managers/CameraManager.js";
 import PixelManager, {
+	Drawable,
 	PixelManagerInterface,
 	Position,
 } from "./Managers/PixelManager.js";
 import Perlin from "./Noise/PerlinNoise.js";
 
-export class Sun extends PixelManager {
+export class Sun extends Drawable {
 	private noise = new Perlin();
 	private time = 0;
-	private position: Position = { x: 0, y: 0 };
 
 	lastSunUpdate: number = 0;
 
-	constructor(private size: number) {
+	constructor(size: number) {
 		let ctx: CanvasRenderingContext2D;
 		const canvas = document.getElementById("sun") as HTMLCanvasElement;
 		if (canvas) {
@@ -19,25 +23,13 @@ export class Sun extends PixelManager {
 		} else {
 			throw new Error("Element with id 'sun' not found.");
 		}
-		super(ctx, canvas);
+		super(ctx, canvas, size, { x: 0, y: 0 });
 		this.ctx.fillStyle = "white";
 		addEventListener("resize", () => {
 			this.resize();
 		});
 
 		this.resize();
-	}
-
-	updateSize(size: number = this.size) {
-		this.size = size;
-	}
-
-	getSize() {
-		return this.size;
-	}
-
-	getPosition() {
-		return this.position;
 	}
 
 	drawPixel(
@@ -115,10 +107,39 @@ export class Sun extends PixelManager {
 		super.drawCircle(center, radius);
 	}
 
-	updatePosition(position: { x: number; y: number }) {
-		this.position = position;
+	async moveSunToCam(
+		position: Position,
+		camZ: number,
+		duration: number,
+	): Promise<void> {
+		const camera = CameraManager.getInstance();
+		const annim = new AnimationManager();
+
+		const originalPosition = { ...camera.getCameraPosition() };
+		const originalCamZ = camera.getZoom();
+		const camPosition = camera.mooveCameraSoElemIsOn(this, position, 30);
+		const targetCamPosition = {
+			x: camPosition.x,
+			y: camPosition.y,
+		};
+
+		await annim.animate(duration, new EaseInOutEasing(), (t) => {
+			camera.setCameraPosition({
+				x: lerp(originalPosition.x, targetCamPosition.x, t),
+				y: lerp(originalPosition.y, targetCamPosition.y, t),
+			});
+
+			camera.setCameraZoom(lerp(originalCamZ, camZ, t));
+		}).then(() => {
+			// Ensure final position and zoom are set after animation
+			camera.setCameraPosition(targetCamPosition);
+			camera.setCameraZoom(camZ);
+		});
 	}
 
+	// updatePosition(position: Position): void {
+	// 	super.updatePosition(position);
+	// }
 }
 
 class SunRayDecorateur extends PixelManager {
@@ -152,4 +173,8 @@ class SunRayDecorateur extends PixelManager {
 		this.drawCircle(center, radius);
 		this.sun.filledCircle(center, radius);
 	}
+}
+
+function lerp(a: number, b: number, t: number) {
+	return a + (b - a) * t;
 }

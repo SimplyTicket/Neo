@@ -3,6 +3,9 @@ interface EasingStrategy {
 }
 
 export default class AnimationManager {
+
+	maxFrameRate: number = 60;
+
 	async animate(
 		duration: number,
 		easing: EasingStrategy,
@@ -11,7 +14,14 @@ export default class AnimationManager {
 		const start = performance.now();
 
 		return new Promise((resolve) => {
+			let lastFrameTime = 0;
 			const step = (now: number) => {
+				if (now - lastFrameTime < 1000 / this.maxFrameRate) {
+					requestAnimationFrame(step);
+					return;
+				}
+				lastFrameTime = now;
+
 				let t = (now - start) / duration;
 				t = Math.min(t, 1);
 

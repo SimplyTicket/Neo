@@ -6,9 +6,19 @@ enum Direction {
 	RIGHT
 }
 
-export abstract class Particle {
-	private maxAmmount: number;
-	private ammount: number;
+export interface ParticleInterface {
+	maxAmmount: number;
+	ammount: number;
+
+	summon(): void;
+	update(): void;
+	draw(dt: number): void;
+	destroy(): void;
+}
+
+export abstract class Particle implements ParticleInterface {
+	maxAmmount: number;
+	ammount: number;
 	private particles: Particle[];
 	private speed: number;
 	private direction: Direction;
