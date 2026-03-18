@@ -69,7 +69,7 @@ function animate(currentTime: number) {
 
 setTimeout(() => {
 	testCamera();
-}, 500);
+}, 2000);
 
 function testCamera() {
 	const annim = new AnimationManager();
@@ -81,12 +81,25 @@ function testCamera() {
 	// camera.mooveCamera({ x: 2, y: 1 });
 	// camera.setCameraZoom(30);
 
-	sunInstance.moveSunToCam({ x: sunInstance.getCanvasWidth() / 2, y: 10 }, 30, 3000).then(() => {
-
+	sunInstance
+		.moveSunToCam(
+			{
+				x: sunInstance.getCanvasWidth() / 2 - 10,
+				y: sunInstance.getCanvasHeight() / 2 * (3 / 4),
+			},
+			10,
+			3000,
+		)
+		.then(() => {
 			// Move the camera back to its original position and zoom after 2 seconds
-			sunInstance.moveSunToCam({ x: 0, y: 100 }, 30, 1000);
-
-	});
+			setTimeout(() => {
+				sunInstance.moveSunToCam(
+					{ x: sunInstance.getCanvasWidth() / 2, y: 15 },
+					30,
+					3500,
+				);
+			});
+		});
 
 	addEventListener("click", (e) => {
 		const clickPosition = PixelManager.getPositionFromRealPosition({ x: e.clientX, y: e.clientY });
