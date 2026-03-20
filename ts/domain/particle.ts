@@ -7,8 +7,6 @@ enum Direction {
 }
 
 export interface ParticleInterface {
-	maxAmmount: number;
-	ammount: number;
 
 	summon(): void;
 	update(): void;

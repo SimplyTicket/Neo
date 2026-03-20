@@ -3,8 +3,8 @@ import { Drawable, Position } from "../Managers/PixelManager.js";
 import { ParticleInterface } from "../particle.js";
 
 export default class Star extends Drawable implements ParticleInterface {
-	private maxDepth = 1000;
-	private minDepth = 100;
+	private maxDepth = 10000;
+	private minDepth = 500;
 	private margin = 10;
 	maxAmmount: number = 100;
 	ammount: number = 0;
@@ -17,7 +17,7 @@ export default class Star extends Drawable implements ParticleInterface {
 		const position = { x: 0, y: 0, z: 0 };
 		super(ctx, canvas, size, position);
 		this.summon();
-		CameraManager.getInstance().addParticul(this, this.position.z!);
+		CameraManager.getInstance().addParticul(this);
 	}
 
 	summon() {
@@ -37,7 +37,7 @@ export default class Star extends Drawable implements ParticleInterface {
 		);
 	}
 
-	updatePosition(position: { x: number; y: number }) {
+	updatePosition(position: Position) {
 
 		// if out of screen, moove it to the other side (with a screen size margin)
 		if (this.position.x! <  -this.margin) {

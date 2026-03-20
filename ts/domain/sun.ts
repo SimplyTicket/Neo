@@ -6,11 +6,13 @@ import PixelManager, {
 	Drawable,
 	PixelManagerInterface,
 	Position,
+	rgba,
 } from "./Managers/PixelManager.js";
 import Perlin from "./Noise/PerlinNoise.js";
+import { ParticleInterface } from "./particle.js";
 
-export class Sun extends Drawable {
-	private noise = new Perlin();
+export class Sun extends Drawable implements ParticleInterface {
+	private noise: Perlin;
 	private time = 0;
 
 	lastSunUpdate: number = 0;
@@ -23,18 +25,37 @@ export class Sun extends Drawable {
 		} else {
 			throw new Error("Element with id 'sun' not found.");
 		}
-		super(ctx, canvas, size, { x: 0, y: 0 });
+		super(ctx, canvas, size, { x: 0, y: 0, z: 0 });
 		this.ctx.fillStyle = "white";
 		addEventListener("resize", () => {
 			this.resize();
 		});
 
+		this.noise = new Perlin();
+
 		this.resize();
+	}
+	summon(): void {
+		throw new Error("Method not implemented.");
+	}
+	update(): void {
+		throw new Error("Method not implemented.");
+	}
+	destroy(): void {
+		throw new Error("Method not implemented.");
+	}
+
+	updateSize(size: number) {
+
+		size = Math.max(10, size); // Minimum size to prevent disappearing
+		size = Math.min(size, 2048); // Maximum size to prevent excessive growth
+
+		super.updateSize(size)
 	}
 
 	drawPixel(
-		position: { x: number; y: number },
-		color?: string,
+		position: Position,
+		color?: rgba,
 		opacity?: number,
 	): void {
 		// Random yellowish color for the sun
@@ -54,9 +75,14 @@ export class Sun extends Drawable {
 				b = Math.floor(25 * (1 - Math.max(temperature + Math.random(), 1))); // Bleu entre 0 et 25
 			else b = 10 + Math.floor(140 * Math.random() * Math.min(temperature, 1)); // Bleu entre 0 et 55
 
-			// b = Math.floor(160 * (1 - Math.max(temperature + Math.random() + 0.2, 1))); // Bleu entre 0 et 10
+			color = {
+				r: r,
+				g: g,
+				b: b,
+				a: opacity
+			} as rgba
 
-			color = `rgba(${r}, ${g}, ${b}, ${opacity ?? 1})`;
+			// b = Math.floor(160 * (1 - Math.max(temperature + Math.random() + 0.2, 1))); // Bleu entre 0 et 10
 		}
 		position.x = Math.floor(position.x);
 		position.y = Math.floor(position.y);
@@ -90,21 +116,12 @@ export class Sun extends Drawable {
 
 	draw(dt: number) {
 		this.lastSunUpdate += dt;
-		if (this.lastSunUpdate < 1 / 15) {
-			// Update the sun at a maximum of 15 FPS
-			return;
-		}
-		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
 		const ray = new SunRayDecorateur(this);
 
 		ray.filledCircle(this.position, this.size / 2);
 		this.addTime(this.lastSunUpdate * 0.4); // Adjust time progression speed based on delta time
 		this.lastSunUpdate = 0;
-	}
-
-	drawCircle(center: { x: number; y: number }, radius: number) {
-		super.drawCircle(center, radius);
 	}
 
 	async moveSunToCam(
@@ -121,20 +138,24 @@ export class Sun extends Drawable {
 		const targetCamPosition = {
 			x: camPosition.x,
 			y: camPosition.y,
+			z: camPosition.z,
 		};
 
-		await annim.animate(duration, new EaseInOutEasing(), (t) => {
-			camera.setCameraPosition({
-				x: lerp(originalPosition.x, targetCamPosition.x, t),
-				y: lerp(originalPosition.y, targetCamPosition.y, t),
-			});
+		await annim
+			.animate(duration, new EaseInOutEasing(), (t) => {
+				camera.setCameraPosition({
+					x: lerp(originalPosition.x, targetCamPosition.x, t),
+					y: lerp(originalPosition.y, targetCamPosition.y, t),
+					z: lerp(originalPosition.z, targetCamPosition.z, t),
+				});
 
-			camera.setCameraZoom(lerp(originalCamZ, camZ, t));
-		}).then(() => {
-			// Ensure final position and zoom are set after animation
-			camera.setCameraPosition(targetCamPosition);
-			camera.setCameraZoom(camZ);
-		});
+				camera.setCameraZoom(lerp(originalCamZ, camZ, t));
+			})
+			.then(() => {
+				// Ensure final position and zoom are set after animation
+				camera.setCameraPosition(targetCamPosition);
+				camera.setCameraZoom(camZ);
+			});
 	}
 
 	// updatePosition(position: Position): void {
@@ -148,7 +169,7 @@ class SunRayDecorateur extends PixelManager {
 		super(sun.getCtx(), sun.getCanvas());
 	}
 
-	drawPixel(position: Position, color?: string): void {
+	drawPixel(position: Position, color?: rgba): void {
 		const temp = this.sun.getTemperature(position);
 
 		// On high temp add pixel arround the current pixel to create rays effect
@@ -160,8 +181,9 @@ class SunRayDecorateur extends PixelManager {
 			const rayX = position.x + Math.cos(angle) * distance;
 			const rayY = position.y + Math.sin(angle) * distance;
 
+
 			this.sun.drawPixel(
-				{ x: Math.floor(rayX), y: Math.floor(rayY) },
+				{ x: Math.floor(rayX), y: Math.floor(rayY), z: this.sun.getPosition().z },
 				color,
 				Math.min(temp + 0.2, 0.8),
 			); // Ray pixels with lower opacity

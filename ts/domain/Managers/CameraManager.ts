@@ -1,3 +1,4 @@
+import { Sun } from "../sun.js";
 import PixelManager, { Drawable, Position } from "./PixelManager.js";
 
 interface listOfParticuls  {
@@ -7,6 +8,21 @@ interface listOfParticuls  {
 }
 
 export default class CameraManager {
+
+	updateBasePosition(element: Drawable, position: Position) {
+		const index = this.getElementIndex(element);
+
+		this.listOfParticuls[index].basePosition = position
+		this.updatePixelManagersPosition()
+	}
+
+	getDepthEffect(element : Drawable) : number {
+		const closestZ = this.getDistanceFromCamera(
+			this.closestObject().getPosition(),
+		);
+		const distance = this.getDistanceFromCamera(element.getPosition());
+		return closestZ / distance;
+	}
 	getZoom() {
 		return this.position.z! - this.baseDistance;
 	}
@@ -24,15 +40,19 @@ export default class CameraManager {
 		return CameraManager.instance;
 	}
 
-	addParticul(pixelManager: Drawable, distance: number): void {
+	addParticul(pixelManager: Drawable): void {
 		const baseSize = pixelManager.getSize();
 		const basePosition = pixelManager.getPosition();
 		this.listOfParticuls.push({ baseSize, basePosition, pixelManager });
+		this.listOfParticuls.sort((a: listOfParticuls, b: listOfParticuls) => {
+			return a.pixelManager.getPosition().z - b.pixelManager.getPosition().z;
+		});
 	}
 
 	setCameraPosition(position: Position): void {
 		this.position.x = position.x;
 		this.position.y = position.y;
+		// this.position.z = position.z;
 		this.updatePixelManagersPosition();
 	}
 
@@ -43,8 +63,37 @@ export default class CameraManager {
 			pixelManager.updatePosition({
 				x: basePosition.x + this.position.x / distance,
 				y: basePosition.y + this.position.y / distance,
+				z: basePosition.z, // May cauze bug should refacor the base position
 			});
 		});
+	}
+
+	closestObject(): Drawable {
+		return this.listOfParticuls[0].pixelManager;
+	}
+
+	furtherObject(): Drawable {
+		return this.listOfParticuls[this.listOfParticuls.length - 1].pixelManager;
+	}
+
+	mooveCameraSoElemIsOn(
+		element: Drawable,
+		position: Position,
+		zoomWillBy: number = this.position.z!,
+	): Position {
+		zoomWillBy += this.baseDistance;
+		const distance = this.getDistanceFromCamera(
+			element.getPosition(),
+			zoomWillBy,
+		);
+		const particul = this.getElement(element);
+
+		if (!particul) throw Error("No element found in the camera");
+
+		const cameraX = (position.x - particul.basePosition.x) * distance;
+		const cameraY = (position.y - particul.basePosition.y) * distance;
+
+		return { x: cameraX, y: cameraY, z: zoomWillBy };
 	}
 
 	updatePixelManagersZoom(): void {
@@ -66,8 +115,11 @@ export default class CameraManager {
 		return this.position;
 	}
 
-	getDistanceFromCamera(position: Position, camPositon :number = this.position.z!): number {
-		return Math.abs((position.z || 0) - camPositon);
+	getDistanceFromCamera(
+		position: Position,
+		camPositon: number = this.position.z!,
+	): number {
+		return Math.abs((position.z || 0) + camPositon);
 	}
 
 	setCameraZoom(z: number): void {
@@ -81,25 +133,14 @@ export default class CameraManager {
 	}
 
 	getElement(elementTofind: Drawable): listOfParticuls | undefined {
-		return this.listOfParticuls.find((element) => {
-			return element.pixelManager == elementTofind;
-		});
+		return this.getElementIndex(elementTofind) !== -1
+			? this.listOfParticuls[this.getElementIndex(elementTofind)]
+			: undefined;
 	}
 
-	mooveCameraSoElemIsOn(
-		element: Drawable,
-		position: Position,
-		zoomWillBy: number = this.position.z!,
-	): Position {
-		zoomWillBy += this.baseDistance
-		const distance = this.getDistanceFromCamera(position, zoomWillBy);
-		const particul = this.getElement(element);
-
-		if (!particul) throw Error("No element found in the camera");
-
-		const cameraX = position.x * distance - particul.basePosition.x;
-		const cameraY = position.y * distance - particul.basePosition.y;
-
-		return { x: cameraX, y: cameraY };
+	getElementIndex(elementTofind: Drawable): number {
+		return this.listOfParticuls.findIndex((element) => {
+			return element.pixelManager == elementTofind;
+		});
 	}
 };

@@ -1,7 +1,9 @@
 import { ParticulManager } from "./domain/particulManager.js";
-import { canvasParticulManager } from "./domain/canvasParticulManager.js";
+import {
+	canvasManager,
+	canvasParticulManager,
+} from "./domain/canvasParticulManager.js";
 import { Sun } from "./domain/sun.js";
-import PerlinNoise, { PerlinNoise2D } from "./domain/Noise/PerlinNoise.js";
 import AnimationManager, {
 	EaseInOutEasing,
 	LinearEasing,
@@ -16,9 +18,29 @@ let frameCount = 0;
 let lastSunUpdate = 0;
 const DEBUG = true;
 
+const sunCanvas = new canvasManager("sun");
+
 const sunInstance = new Sun(128);
+
+const sunInstance2 = new Sun(128);
+
 const camera = CameraManager.getInstance();
-camera.addParticul(sunInstance, 50);
+
+sunCanvas.addParticle(sunInstance);
+sunCanvas.addParticle(sunInstance2);
+camera.addParticul(sunInstance);
+camera.addParticul(sunInstance2);
+camera.updateBasePosition(sunInstance2, {
+	x: sunInstance.getCanvasWidth() / 2,
+	y: sunInstance2.getCanvasHeight() / 2 + 20,
+	z: 20,
+});
+camera.updateBasePosition( sunInstance, {
+	x: sunInstance.getCanvasWidth() / 2,
+	y: sunInstance.getCanvasHeight() / 2,
+	z: 0,
+});
+camera.updatePixelManagersZoom()
 
 function main() {
 	// Init DisplayManager to handle tab visibility and FPS capping
@@ -30,8 +52,6 @@ function main() {
 	// make the annimation frame
 
 	window.requestAnimationFrame(animate);
-
-	// sunInstance.updatePosition({ x: 50, y: 50 });
 
 
 	canvasParticulManager.getInstance().addStars();
@@ -59,9 +79,10 @@ function animate(currentTime: number) {
 	// Draw all particles managed by ParticulManager
 	// ParticulManager.getInstance().draw(deltaTime);
 	canvasParticulManager.getInstance().draw(deltaTime);
+	sunCanvas.draw(deltaTime);
 
-	// Update the sun's appearance based on Perlin noise every 0.3 seconds
-	sunInstance.draw(deltaTime);
+	// sunInstance.draw(deltaTime);
+	// sunInstance2.draw(deltaTime)
 
 	// Request the next animation frame
 	window.requestAnimationFrame(animate);
@@ -78,14 +99,15 @@ function testCamera() {
 	// camera.setCameraZoom(30);
 	// camera.setCameraPosition(position)
 
-	// camera.mooveCamera({ x: 2, y: 1 });
+	// camera.mooveCamera({ x: 2, y: 1, z: NaN });
 	// camera.setCameraZoom(30);
 
 	sunInstance
 		.moveSunToCam(
 			{
-				x: sunInstance.getCanvasWidth() / 2 - 10,
-				y: sunInstance.getCanvasHeight() / 2 * (3 / 4),
+				x: sunInstance.getCanvasWidth() / 2 + 20,
+				y: (sunInstance.getCanvasHeight() / 2) * (3 / 4),
+				z: NaN,
 			},
 			10,
 			3000,
@@ -94,7 +116,7 @@ function testCamera() {
 			// Move the camera back to its original position and zoom after 2 seconds
 			setTimeout(() => {
 				sunInstance.moveSunToCam(
-					{ x: sunInstance.getCanvasWidth() / 2, y: 15 },
+					{ x: sunInstance.getCanvasWidth() / 2, y: 15, z: NaN },
 					30,
 					3500,
 				);
@@ -102,7 +124,10 @@ function testCamera() {
 		});
 
 	addEventListener("click", (e) => {
-		const clickPosition = PixelManager.getPositionFromRealPosition({ x: e.clientX, y: e.clientY });
+		const clickPosition = PixelManager.getPositionFromRealPosition({
+			x: e.clientX,
+			y: e.clientY,
+		});
 
 		sunInstance.moveSunToCam(clickPosition, camera.getZoom(), 1000);
 	});
@@ -111,16 +136,9 @@ function testCamera() {
 	document.addEventListener("scroll", (event) => {
 		const scroolDiff = window.scrollY - lastScrollY;
 
-		camera.mooveCamera({ x: 0, y: scroolDiff * 3 });
+		camera.mooveCamera({ x: 0, y: scroolDiff * 3, z: NaN });
 		lastScrollY = window.scrollY;
-
-
-
-
 	});
-
-
-
 
 	// annim
 	// .animate(3000, new EaseInOutEasing(), (t) => {

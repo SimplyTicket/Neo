@@ -1,5 +1,6 @@
 import Star from "./bg/stars.js";
 import { CanvasStar } from "./canvasStar.js";
+import { Drawable } from "./Managers/PixelManager.js";
 import { Particle, ParticleInterface } from "./particle.js";
 
 export enum DirectionEnum {
@@ -16,17 +17,16 @@ export const DirectionVectors = {
 	[DirectionEnum.RIGHT]: { x: 1, y: 0 },
 };
 
-export class canvasParticulManager {
-	private static instance: canvasParticulManager;
+export class canvasManager {
 	public canvas: HTMLCanvasElement;
-	private ctx: CanvasRenderingContext2D;
-	private particles: ParticleInterface[] = [];
+	protected ctx: CanvasRenderingContext2D;
+	private particles: Drawable[] = [];
 	private lastTime: number = 0;
-	private timeSinceLastStar: number = 0;
-	private maxParticuls = 60 * 3;
+	protected maxParticuls = 60 * 3;
 	public activParticuls: boolean = true;
+	lastFrame: number = 0;
 
-	private constructor(canvasId: string = "starBg") {
+	constructor(canvasId: string, private frameRate : number = 0) {
 		const canvas = document.getElementById(canvasId) as HTMLCanvasElement;
 		if (!canvas) {
 			throw new Error(`Canvas element with id "${canvasId}" not found`);
@@ -65,15 +65,7 @@ export class canvasParticulManager {
 		ctx.imageSmoothingEnabled = false;
 	}
 
-
-	static getInstance(canvasId: string = "starBg"): canvasParticulManager {
-		if (!canvasParticulManager.instance) {
-			canvasParticulManager.instance = new canvasParticulManager(canvasId);
-		}
-		return canvasParticulManager.instance;
-	}
-
-	addParticle(particle: ParticleInterface): void {
+	addParticle(particle: Drawable): void {
 		this.particles.push(particle);
 	}
 
@@ -81,7 +73,7 @@ export class canvasParticulManager {
 		return this.particles
 	}
 
-	removeParticle(particle: ParticleInterface): void {
+	removeParticle(particle: Drawable): void {
 		const index = this.particles.indexOf(particle);
 		if (index !== -1) {
 			this.particles.splice(index, 1);
@@ -89,11 +81,22 @@ export class canvasParticulManager {
 	}
 
 	draw(dt: number): void {
+		this.lastFrame += dt;
+		if (this.lastFrame < 1 / 15) {
+			// Update the sun at a maximum of 15 FPS
+			return;
+		}
+
 		dt = Math.min(dt, 1 / 30); // Cap dt to avoid big jumps (e.g., when the tab was inactive)
 		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+		// Draw all particles ordered by their z-index (if they have one)
+		this.particles.sort((a: Drawable, b: Drawable) => (b.getPosition().z - a.getPosition().z));
 		this.particles.forEach((particle) => {
 			particle.draw(dt);
 		});
+
+		this.lastFrame = 0;
 
 		// One new star every 0.1 second
 		// this.timeSinceLastStar = (this.timeSinceLastStar || 0) + dt;
@@ -106,6 +109,17 @@ export class canvasParticulManager {
 		// 	this.timeSinceLastStar = 0;
 		// }
 
+	}
+}
+
+export class canvasParticulManager extends canvasManager{
+	private static instance: canvasParticulManager;
+
+	static getInstance(canvasId: string = "starBg"): canvasParticulManager {
+		if (!canvasParticulManager.instance) {
+			canvasParticulManager.instance = new canvasParticulManager(canvasId);
+		}
+		return canvasParticulManager.instance;
 	}
 
 	addStars() {
