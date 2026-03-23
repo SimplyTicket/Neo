@@ -22,7 +22,7 @@ export class canvasManager {
 	protected ctx: CanvasRenderingContext2D;
 	private particles: Drawable[] = [];
 	private lastTime: number = 0;
-	protected maxParticuls = 60 * 3;
+	protected maxParticuls :number;
 	public activParticuls: boolean = true;
 	lastFrame: number = 0;
 
@@ -40,6 +40,7 @@ export class canvasManager {
 		this.canvas.width = window.innerWidth;
 		this.ctx = ctx;
 		this.resize(this.canvas, this.ctx);
+		this.maxParticuls = Math.floor((this.canvas.width * this.canvas.height) / 10000);
 		addEventListener("resize", () => {
 			this.resize(this.canvas, this.ctx);
 			CanvasStar.innerHeight = window.innerHeight;
@@ -59,6 +60,11 @@ export class canvasManager {
 
 		canvas.width = Math.floor(width * dpr);
 		canvas.height = Math.floor(height * dpr);
+
+		this.maxParticuls = Math.floor(
+			(this.canvas.width * this.canvas.height) / 10000,
+		);
+
 
 		// ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
