@@ -1,10 +1,12 @@
 import home from "../Pages/home.js";
 import WebRing from "../Pages/WebRing.js";
 import PageAbstract from "../Pages/PageAbstract.js";
+import ReleaseNotes from "../Pages/ReleaseNotes.js";
 
 const Pages = new Map<string, PageAbstract>([
 	["home", new home()],
 	["WebRing", new WebRing()],
+	["ReleaseNotes", new ReleaseNotes()],
 ]);
 
 

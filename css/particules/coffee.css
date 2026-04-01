@@ -1,6 +1,8 @@
 .coffee {
   background-image: url("../../assets/coffee.png");
-  width: 256px;
+  /* adapt size to available space base img size is 256px */
+  width: 100%;
+  max-width: 256px;
   height: 256px;
 
   background-size: calc(256px * 5) 256px;

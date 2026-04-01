@@ -44,6 +44,7 @@
 					class="d-flex col-9 justify-content-between list-unstyled m-0 p-2 gap-3"
 				>
 					<li><a href="#" dest="home">Home</a></li>
+					<li><a href="#" dest="ReleaseNotes">Release Notes</a></li>
 					<li><a href="#" dest="WebRing">Rings</a></li>
 				</ul>
 			</div>
@@ -57,7 +58,7 @@
 			<div class="row" id="frameRate"></div>
 
 			<div class="row g-3">
-				<div class="col-12 col-lg-4 d-flex">
+				<div class="col-12 col-md-4 d-flex">
 					<div class="cool-border bg-dark-50 align-self-stretch p-2">
 						<h3 class="ms-2">What am I ?</h3>
 						<p>
@@ -80,7 +81,7 @@
 						<div class="coffee"></div>
 					</div>
 				</div>
-				<div class="col-12 col-lg-8 d-flex">
+				<div class="col-12 col-md-8 d-flex">
 					<div class="cool-border bg-dark-50 align-self-stretch p-2">
 						<div>
 							<h3 class="ms-2">- What is this</h3>
@@ -157,55 +158,85 @@
 		<div
 			id="WebRing"
 			pageName="WebRing"
-			class="container-sm align-items-center flex-column display-none"
+			class="container align-items-center flex-column display-none"
 		>
 			<h1 class="p-1 text-center">WebRing</h1>
-				<div class="col-12 col-md-7 d-flex">
-					<div class="cool-border bg-dark-50 align-self-stretch w-stretch p-2">
-						<h3 class="ms-2">WebRings</h3>
-						<p>
-							Here you can find the rings i'm a part of and some of my friends.
-						</p>
-						<p>Yes i know how sad is it to see this empty...</p>
+			<div class="col-12 col-md-7 d-flex">
+				<div class="cool-border bg-dark-50 align-self-stretch w-stretch p-2">
+					<h3 class="ms-2">WebRings</h3>
+					<p>
+						Here you can find the rings i'm a part of and some of my friends.
+					</p>
+					<p>Yes i know how sad is it to see this empty...</p>
+				</div>
+			</div>
+
+			<div id="link-container">
+				<div
+					circlePos="1"
+					class="d-flex justify-content-center align-items-center flex-column"
+				>
+					<img
+						width="88"
+						height="33"
+						src="assets/logo.gif"
+						alt="Logo"
+						class="logo"
+					/>
+					<a class="p-2" href="https://neocities.org/site/simply-ticket">
+						My NeoCities profile
+					</a>
+				</div>
+				<div circlePos="2" href="">
+					<div id="francophonering">
+						<script
+							type="text/javascript"
+							src="https://francophonering.neocities.org/onionring-variables.js"
+						></script>
+						<script
+							type="text/javascript"
+							src="https://francophonering.neocities.org/onionring-widget.js"
+						></script>
 					</div>
 				</div>
-
-				<div id="link-container">
-
-					<div circlePos="1" class="d-flex justify-content-center align-items-center flex-column">
-						<img width="88" height="33" src="assets/logo.gif" alt="Logo" class="logo" />
-						<a class="p-2" href="https://neocities.org/site/simply-ticket">
-							My NeoCities profile
-						</a>
-					</div>
-					<div circlePos="2" href="">
-						<div id='francophonering'>
-							<script type="text/javascript" src="https://francophonering.neocities.org/onionring-variables.js"></script>
-							<script type="text/javascript" src="https://francophonering.neocities.org/onionring-widget.js"></script>
-						</div>
-					</div>
-					<div circlePos="3" href=""></div>
-					<div circlePos="4" href=""></div>
-					<div circlePos="5" href=""></div>
-					<div circlePos="6" href=""></div>
-				</div>
-
-				<!-- <div id="francophonering">
-					<script
-						type="text/javascript"
-						src="https://francophonering.neocities.org/onionring-variables.js"
-					></script>
-					<script
-						type="text/javascript"
-						src="https://francophonering.neocities.org/onionring-widget.js"
-					></script>
-				</div> -->
+				<div circlePos="3" href=""></div>
+				<div circlePos="4" href=""></div>
+				<div circlePos="5" href=""></div>
+				<div circlePos="6" href=""></div>
 			</div>
 		</div>
+
+		<div
+			id="ReleaseNotes"
+			pageName="ReleaseNotes"
+			class="container align-items-center flex-column display-none"
+		>
+			<div class="row pt-5">
+				<div class="col-12 col-md-3">
+					<h1>Release Notes</h1>
+					<div>Last update: <span id="last-release-date">2026-01-04</span></div>
+				</div>
+				<div class="col-12 col-md-9">
+					<div class="cool-border bg-dark-50 align-self-stretch w-stretch p-2">
+						<div id="release">
+							<h3 class="ms-2"> <span id="release-title">v0.1.0 : Adding a Release note page</span> - <span id="release-date">2026-01-04</span></h3>
+							<p id="release-description">
+								Finally, a page to write down all the changes and updates of the website :3 <br />
+								I added the possibility to add PAGES now. better late than never... <br />
+								So i started by adding web ring but it was too sad to have nothing to add here... so i did this a Release where i could tell you more about what i'm working on ! <br>
+								I also made some fix for the few that will use this a on phone ;)
+							</p>
+							<p>PLS take care of you &#60;3 </p>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<canvas class="relative" id="sun" width="" height=""></canvas>
 		<canvas class="relative" id="starBg" width="" height=""></canvas>
 		<canvas class="relative" id="link-stars" width="" height=""></canvas>
-
 
 		<div id="particulContainer"></div>
 	</body>

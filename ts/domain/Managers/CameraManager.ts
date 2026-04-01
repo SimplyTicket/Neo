@@ -143,4 +143,8 @@ export default class CameraManager {
 			return element.pixelManager == elementTofind;
 		});
 	}
+
+	getAllElements(): Drawable[] {
+		return this.listOfParticuls.map((element) => element.pixelManager);
+	}
 };
