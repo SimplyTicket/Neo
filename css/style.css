@@ -78,6 +78,14 @@ a {
 	width: max-content;
 }
 
+.rounded-1 {
+	border-radius: 5px;
+}
+
+.bg-back-50 {
+	background-color: #03002372;
+}
+
 .opacity-0 {
 	opacity: 0;
 }
