@@ -4,7 +4,7 @@ interface EasingStrategy {
 
 export default class AnimationManager {
 
-	maxFrameRate: number = 60;
+	constructor(public maxFrameRate: number = 60) {}
 
 	async animate(
 		duration: number,
@@ -34,6 +34,10 @@ export default class AnimationManager {
 
 			requestAnimationFrame(step);
 		});
+	}
+
+	static lerp(start: number, end: number, t: number): number {
+		return start + (end - start) * t;
 	}
 }
 

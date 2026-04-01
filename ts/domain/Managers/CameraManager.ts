@@ -112,7 +112,7 @@ export default class CameraManager {
 	}
 
 	getCameraPosition(): Position {
-		return this.position;
+		return { x: this.position.x, y: this.position.y, z: this.position.z! - this.baseDistance };
 	}
 
 	getDistanceFromCamera(

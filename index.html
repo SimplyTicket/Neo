@@ -35,7 +35,24 @@
 		<link rel="stylesheet" href="css/particules/star.css" />
 	</head>
 	<body>
-		<div class="container-sm align-items-center flex-column">
+		<nav>
+			<div class="d-flex justify-content-center px-5">
+				<div class="col-3">
+					<img src="assets/logo.gif" alt="Logo" class="logo" />
+				</div>
+				<ul
+					class="d-flex col-12 col-lg-9 justify-content-between list-unstyled m-0 p-2 gap-3"
+				>
+					<li><a href="#" dest="home">Home</a></li>
+					<li><a href="#" dest="WebRing">Rings</a></li>
+				</ul>
+			</div>
+		</nav>
+		<div
+			id="page1"
+			pageName="home"
+			class="container-sm align-items-center flex-column"
+		>
 			<h1 class="p-1 text-center">Bonjour, i'm ticket</h1>
 			<div class="row" id="frameRate"></div>
 
@@ -102,8 +119,11 @@
 						<div class="">
 							<h3 class="ms-2">- Git</h3>
 							<p>
-								You can find the code of this website on my github, I don't care what you do with it, you can sell it, print it and then eat it, really i don't care <br />
-								But don't be a jerk and don't say that you made it, and if you do i won't do anything <br />
+								You can find the code of this website on my github, I don't care
+								what you do with it, you can sell it, print it and then eat it,
+								really i don't care <br />
+								But don't be a jerk and don't say that you made it, and if you
+								do i won't do anything <br />
 								<a href="https://github.com/SimplyTicket/Neo">Github</a>
 							</p>
 						</div>
@@ -111,13 +131,15 @@
 						<div class="">
 							<h3 class="ms-2">- AI Policy</h3>
 							<p>
-								I like this place, I want to build something that look like me, where i can practice, try things and fail. So I only use it when I face a wall and I can't find a solution on Stack Overflow :3
+								I like this place, I want to build something that look like me,
+								where i can practice, try things and fail. So I only use it when
+								I face a wall and I can't find a solution on Stack Overflow :3
 							</p>
 						</div>
 					</div>
 				</div>
 			</div>
-			<div class="row gx-3 mt-2">
+			<!-- <div class="row gx-3 mt-2">
 				<div  class="col-12">
 					<div class="cool-border bg-dark-50">
 						<div class="m-1">
@@ -130,14 +152,62 @@
 						</div>
 					</div>
 				</div>
-			</div>
-
+			</div> -->
 		</div>
-		<canvas class="relative" id="sun" width="800" height="800"></canvas>
+		<div
+			id="WebRing"
+			pageName="WebRing"
+			class="container-sm align-items-center flex-column display-none"
+		>
+			<h1 class="p-1 text-center">WebRing</h1>
+			<div class="row g-3">
+				<div class="col-12 col-md-6 d-flex">
+					<div class="cool-border bg-dark-50 align-self-stretch w-stretch p-2">
+						<h3 class="ms-2">WebRings</h3>
+						<p>
+							Here you can find the rings i'm a part of and some of my friends.
+						</p>
+						<p>Yes i know how sad is it to see this empty...</p>
+					</div>
+				</div>
+
+				<div id="link-container">
+
+					<a circlePos="1" href="">1</a>
+					<a circlePos="2" href="">2</a>
+					<a circlePos="3" href="">3</a>
+					<a circlePos="4" href="">4</a>
+					<a circlePos="5" href="">5</a>
+					<a circlePos="6" href="">6</a>
+
+
+					<!-- <a class="circle-3" href="https://neocities.org/site/simply-ticket">My NeoCities</a>
+					<a class="circle-9" href="https://francophonering.neocities.org/">Francophone Ring</a> -->
+				</div>
+
+				<!-- <div id="francophonering">
+					<script
+						type="text/javascript"
+						src="https://francophonering.neocities.org/onionring-variables.js"
+					></script>
+					<script
+						type="text/javascript"
+						src="https://francophonering.neocities.org/onionring-widget.js"
+					></script>
+				</div> -->
+			</div>
+		</div>
+		<canvas class="relative" id="sun" width="" height=""></canvas>
 		<canvas class="relative" id="starBg" width="" height=""></canvas>
+		<canvas class="relative" id="link-stars" width="" height=""></canvas>
+
 
 		<div id="particulContainer"></div>
 	</body>
 	<!-- Si ton fichier est dans `/js/main.js` : -->
 	<script type="module" src="/ts/main.ts"></script>
+	<meta
+		http-equiv="Content-Security-Policy"
+		content="default-src 'self'; style-src 'self' 'unsafe-inline' data:; script-src 'self' https://francophonering.neocities.org;"
+	/>
 </html>

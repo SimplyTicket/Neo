@@ -48,3 +48,21 @@ body {
 a {
 	color: rgba(233, 227, 227, 0.591);
 }
+
+.list-unstyled {
+	list-style-type: none;
+	padding-left: 0;
+}
+
+.w-stretch {
+	width: 100%;
+}
+
+#link-container {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: -1;
+}

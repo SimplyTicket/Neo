@@ -22,11 +22,17 @@ export class canvasManager {
 	protected ctx: CanvasRenderingContext2D;
 	private particles: Drawable[] = [];
 	private lastTime: number = 0;
-	protected maxParticuls :number;
+	protected maxParticuls: number;
 	public activParticuls: boolean = true;
 	lastFrame: number = 0;
+	private static canvasInstance: canvasManager[] = [];
+	protected static instance: canvasParticulManager;
 
-	constructor(canvasId: string, private frameRate : number = 0) {
+	constructor(
+		canvasId: string,
+		private frameRate: number = 15,
+
+	) {
 		const canvas = document.getElementById(canvasId) as HTMLCanvasElement;
 		if (!canvas) {
 			throw new Error(`Canvas element with id "${canvasId}" not found`);
@@ -40,12 +46,14 @@ export class canvasManager {
 		this.canvas.width = window.innerWidth;
 		this.ctx = ctx;
 		this.resize(this.canvas, this.ctx);
-		this.maxParticuls = Math.floor((this.canvas.width * this.canvas.height) / 10000);
+		this.maxParticuls = Math.floor(
+			(this.canvas.width * this.canvas.height) / 10000,
+		);
 		addEventListener("resize", () => {
 			this.resize(this.canvas, this.ctx);
 			CanvasStar.innerHeight = window.innerHeight;
 			CanvasStar.innerWidth = window.innerWidth;
-		})
+		});
 	}
 
 	resize(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
@@ -65,7 +73,6 @@ export class canvasManager {
 			(this.canvas.width * this.canvas.height) / 10000,
 		);
 
-
 		// ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
 		ctx.imageSmoothingEnabled = false;
@@ -76,7 +83,7 @@ export class canvasManager {
 	}
 
 	getParticuls() {
-		return this.particles
+		return this.particles;
 	}
 
 	removeParticle(particle: Drawable): void {
@@ -88,7 +95,7 @@ export class canvasManager {
 
 	draw(dt: number): void {
 		this.lastFrame += dt;
-		if (this.lastFrame < 1 / 15) {
+		if (this.lastFrame < 1 / this.frameRate) {
 			// Update the sun at a maximum of 15 FPS
 			return;
 		}
@@ -97,9 +104,17 @@ export class canvasManager {
 		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
 		// Draw all particles ordered by their z-index (if they have one)
-		this.particles.sort((a: Drawable, b: Drawable) => (b.getPosition().z - a.getPosition().z));
+		this.particles.sort(
+			(a: Drawable, b: Drawable) => b.getPosition().z - a.getPosition().z,
+		);
 		this.particles.forEach((particle) => {
 			particle.draw(dt);
+		});
+
+		canvasManager.canvasInstance.forEach((instance) => {
+			if (instance !== this) {
+				instance.draw(dt);
+			}
 		});
 
 		this.lastFrame = 0;
@@ -114,12 +129,21 @@ export class canvasManager {
 		// 	this.addParticle(new CanvasStar(this, undefined, this.ctx));
 		// 	this.timeSinceLastStar = 0;
 		// }
+	}
 
+	addCanvasManager(particulManager: canvasManager) {
+		canvasManager.canvasInstance.push(particulManager);
+	}
+
+	removeCanvasManager(particulManager: canvasManager) {
+		const index = canvasManager.canvasInstance.indexOf(particulManager);
+		if (index !== -1) {
+			canvasManager.canvasInstance.splice(index, 1);
+		}
 	}
 }
 
 export class canvasParticulManager extends canvasManager{
-	private static instance: canvasParticulManager;
 
 	static getInstance(canvasId: string = "starBg"): canvasParticulManager {
 		if (!canvasParticulManager.instance) {

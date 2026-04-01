@@ -9,7 +9,7 @@ export default class Perlin {
 		// this.memory = {};
 	}
 
-	rand_vect() {
+	private rand_vect() {
 		const theta = Math.random() * 2 * Math.PI;
 		const phi = Math.acos(2 * Math.random() - 1);
 
@@ -20,7 +20,7 @@ export default class Perlin {
 		};
 	}
 
-	dot_prod_grid(
+	private dot_prod_grid(
 		x: number,
 		y: number,
 		z: number,
@@ -43,10 +43,10 @@ export default class Perlin {
 		return d_vect.x * g_vect.x + d_vect.y * g_vect.y + d_vect.z * g_vect.z;
 	}
 
-	smootherstep(x: number) {
+	private smootherstep(x: number) {
 		return 6 * x ** 5 - 15 * x ** 4 + 10 * x ** 3;
 	}
-	interp(x: number, a: number, b: number) {
+	private interp(x: number, a: number, b: number) {
 		return a + this.smootherstep(x) * (b - a);
 	}
 	get(x: number, y: number, z: number): number {
@@ -82,6 +82,28 @@ export default class Perlin {
 		return v;
 	}
 };
+
+// class LowResPerlin implements Perlin {
+
+// 	private resolution: number;
+
+// 	constructor(resolution: number) {
+// 		super();
+// 		this.resolution = resolution;
+// 	}
+// 	get(x: number, y: number, z: number): number {
+// 		throw new Error("Method not implemented.");
+// 	}
+
+// 	buildGrid() {
+
+// 	}
+
+// 	bilinearInterpolate(x: number, y: number): number {
+
+// 	}
+
+// }
 
 // export class PerlinNoise2D extends PixelManager {
 // 	private noise: Perlin;

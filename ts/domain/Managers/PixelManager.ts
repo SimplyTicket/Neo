@@ -151,16 +151,28 @@ export default abstract class PixelManager implements PixelManagerInterface {
 	}
 
 	filledCircle(center: Position, radius: number) {
-		this.drawCircle(center, radius);
+		let x = 0;
+		let y = radius;
+		let d = 3 - 2 * radius;
 
-		for (let y = -radius; y <= radius; y++) {
-			const height = Math.sqrt(radius * radius - y * y);
-			for (let x = -height; x <= height; x++) {
-				this.drawPixel({
-					x: Math.round(center.x + x),
-					y: Math.round(center.y + y),
-					z: 0,
-				});
+		const drawHLine = (x1: number, x2: number, row: number) => {
+			for (let i = x1; i <= x2; i++) {
+				this.drawPixel({ x: i, y: row, z: 0 });
+			}
+		};
+
+		while (x <= y) {
+			drawHLine(center.x - x, center.x + x, center.y + y);
+			drawHLine(center.x - x, center.x + x, center.y - y);
+			drawHLine(center.x - y, center.x + y, center.y + x);
+			drawHLine(center.x - y, center.x + y, center.y - x);
+
+			x++;
+			if (d < 0) {
+				d = d + 4 * x + 6;
+			} else {
+				y--;
+				d = d + 4 * (x - y) + 10;
 			}
 		}
 	}
@@ -186,18 +198,28 @@ export default abstract class PixelManager implements PixelManagerInterface {
 export abstract class Drawable extends PixelManager {
 	protected position: Position;
 	protected size: number;
-	private depth : number = 1;
+	private depth: number = 1;
+	private cam: CameraManager | null = CameraManager.getInstance();
 
-	constructor(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, size: number, position: Position) {
+	constructor(
+		ctx: CanvasRenderingContext2D,
+		canvas: HTMLCanvasElement,
+		size: number,
+		position: Position,
+	) {
 		super(ctx, canvas);
 		this.size = size;
 		this.position = position;
 	}
 
+	disableCameraEffect() {
+		this.cam = null;
+	}
+
 	updatePosition(position: Position) {
 		// this.position = position;
 
-		this.depth = CameraManager.getInstance().getDepthEffect(this);
+		this.depth = this.cam ? this.cam.getDepthEffect(this) : 1;
 
 		this.position = {
 			x: position.x,
@@ -207,18 +229,17 @@ export abstract class Drawable extends PixelManager {
 	}
 
 	getRgbString(color: rgba): string {
-
 		let finalColor;
 		// add darken factor to deeper object
 
-		const r = color.r * this.depth
-		const g = color.g * this.depth
-		const b = color.b * this.depth
-		const a = color.a
+		const r = color.r * this.depth;
+		const g = color.g * this.depth;
+		const b = color.b * this.depth;
+		const a = color.a;
 
 		finalColor = `rgba(${r}, ${g}, ${b}, ${a ?? 1})`;
 
-		return finalColor
+		return finalColor;
 	}
 
 	updateSize(size: number) {

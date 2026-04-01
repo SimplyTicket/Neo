@@ -10,6 +10,7 @@ import AnimationManager, {
 } from "./domain/Managers/AnnimationManager.js";
 import CameraManager from "./domain/Managers/CameraManager.js";
 import PixelManager from "./domain/Managers/PixelManager.js";
+import PageManager from "./domain/Managers/PageManager.js";
 
 document.addEventListener("DOMContentLoaded", main);
 
@@ -43,14 +44,11 @@ camera.updateBasePosition( sunInstance, {
 camera.updatePixelManagersZoom()
 
 function main() {
-	// Init DisplayManager to handle tab visibility and FPS capping
-	// DisplayManager.setUpEventListeners();
 
-	// Create a new star and summon it to the page
-	// ParticulManager.getInstance().summonMaxParticuls();
+	// PreBoot tasks
+	PageManager.getInstance();
 
-	// make the annimation frame
-
+	// Initialize the annimation loop
 	window.requestAnimationFrame(animate);
 
 
@@ -87,10 +85,6 @@ function animate(currentTime: number) {
 	// Request the next animation frame
 	window.requestAnimationFrame(animate);
 }
-
-setTimeout(() => {
-	testCamera();
-}, 2000);
 
 function testCamera() {
 	const annim = new AnimationManager();
