@@ -30,7 +30,7 @@ export default class WebRing extends PageAbstract {
 
 		// get links
 		const linkContainer = document.getElementById("link-container");
-		const links = linkContainer ? linkContainer.querySelectorAll("a") : [];
+		const links = linkContainer ? linkContainer.querySelectorAll("[circlePos]") : [];
 
 		if (!linkContainer) {
 			throw new Error("Link container not found");
@@ -50,22 +50,53 @@ export default class WebRing extends PageAbstract {
 	}
 
 	getPositionForLink(link: Element, raduisMult: number = 1): { x: number; y: number } {
-			const div = link.getAttribute("circlePos")
-				? parseInt(link.getAttribute("circlePos")!)
-				: this.division;
-			const angle =
-				((360 / this.division) * div + this.degOffset) * (Math.PI / 180);
-			const x = this.centerX + this.radius * raduisMult * Math.cos(angle);
-			const y = this.centerY + this.radius * raduisMult * Math.sin(angle);
-			return { x, y };
+		// is on small device, put links in a square list
+		// if (window.innerWidth < 600) {
+		// 	const index = link.getAttribute("circlePos")
+		// 		? parseInt(link.getAttribute("circlePos")!)
+		// 		: 1;
+
+		// 	const y = 300 + ((index - 1) % 2) * 50;
+		// 	const x = index % 2 === 0 ? 100 : window.innerWidth - 100;
+		// 	return { x, y };
+		// }
+
+		if (window.innerWidth < 780) {
+			this.centerY = window.innerHeight * 0.75;
+			// this.degOffset = 90;
+		}
+
+		const div = link.getAttribute("circlePos")
+			? parseInt(link.getAttribute("circlePos")!)
+			: this.division;
+		const angle =
+			((360 / this.division) * div + this.degOffset) * (Math.PI / 180);
+		const x = this.centerX + this.radius * raduisMult * Math.cos(angle);
+		const y = this.centerY + this.radius * raduisMult * Math.sin(angle);
+		return { x, y };
 	}
 
+
+	async beforeSwitch(): Promise<void> {
+		super.beforeSwitch();
+		// hide links
+		const linkContainer = document.getElementById("link-container");
+		const links = linkContainer ? linkContainer.querySelectorAll("[circlePos]") : [];
+
+		if (!linkContainer) {
+			throw new Error("Link container not found");
+		}
+
+		links.forEach((link) => {
+			link.classList.add("opacity-0");
+		});
+	}
 
 	async afterSwitch(): Promise<void> {
 		super.afterSwitch();
 		const linkContainer = document.getElementById("link-container");
 
-		const links = linkContainer ? linkContainer.querySelectorAll("a") : [];
+		const links = linkContainer ? linkContainer.querySelectorAll("[circlePos]") : [];
 
 		if (!linkContainer) {
 			throw new Error("Link container not found");
@@ -79,8 +110,8 @@ export default class WebRing extends PageAbstract {
 			sun.disableCameraEffect();
 			const rect = link.getBoundingClientRect();
 			const position = PixelManager.getPositionFromRealPosition({
-				x: rect.x,
-				y: rect.y,
+				x: rect.x + rect.width / 2,
+				y: rect.y + rect.height / 2,
 			});
 
 
@@ -97,6 +128,9 @@ export default class WebRing extends PageAbstract {
 					y: AnimationManager.lerp(beginPosition.y, position.y, t),
 					z: 0,
 				});
+			}).then(() => {
+				// display link after animation
+				link.classList.remove("opacity-0");
 			});
 
 			this.prticulManager!.addParticle(sun);

@@ -8,7 +8,7 @@ import PixelManager, {
 	Position,
 	rgba,
 } from "./Managers/PixelManager.js";
-import Perlin from "./Noise/PerlinNoise.js";
+import Perlin, { PerlinProxy } from "./Noise/PerlinNoise.js";
 import { ParticleInterface } from "./particle.js";
 
 export class Sun extends Drawable implements ParticleInterface {

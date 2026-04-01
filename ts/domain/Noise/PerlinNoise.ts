@@ -1,3 +1,4 @@
+import AnimationManager from "../Managers/AnnimationManager.js";
 import PixelManager, { Position, sleep } from "../Managers/PixelManager.js";
 
 export default class Perlin {
@@ -81,29 +82,66 @@ export default class Perlin {
 		// this.memory[key] = v;
 		return v;
 	}
-};
+}
 
-// class LowResPerlin implements Perlin {
+// it was dumb it dont work, don't use this
+export class PerlinProxy extends Perlin {
+	private grild2D: { [key: string]: number } = {};
+	private position: { x: number; y: number }[];
+	private lastZcalculated: number = NaN;
+	private nextZCalculated: number = NaN;
+	private nextGrild2D: { [key: string]: number } = {};
 
-// 	private resolution: number;
+	constructor() {
+		super();
+		this.position = [];
+	}
 
-// 	constructor(resolution: number) {
-// 		super();
-// 		this.resolution = resolution;
-// 	}
-// 	get(x: number, y: number, z: number): number {
-// 		throw new Error("Method not implemented.");
-// 	}
+	get(x: number, y: number, z: number): number {
+		const key = `${x},${y}`;
 
-// 	buildGrid() {
+		// Première frame : calcul direct, on enregistre les positions
+		if (isNaN(this.lastZcalculated)) {
+			const value = super.get(x, y, z);
+			this.position.push({ x, y });
+			this.grild2D[key] = value;
+			return value;
+		}
 
-// 	}
+		// z a dépassé le prochain snapshot → recalculer
+		if (z >= this.nextZCalculated) {
+			this.grild2D = this.nextGrild2D;
+			this.lastZcalculated = this.nextZCalculated;
+			this.calculateNextGrild2D(z + 5);
+		}
 
-// 	bilinearInterpolate(x: number, y: number): number {
+		// Nouveau point jamais vu → calcul direct + enregistrement
+		if (this.grild2D[key] === undefined) {
+			const value = super.get(x, y, z);
+			this.position.push({ x, y });
+			this.grild2D[key] = value;
+			this.nextGrild2D[key] = super.get(x, y, this.nextZCalculated);
+			return value;
+		}
 
-// 	}
+		// Point connu → lerp entre les deux snapshots
+		const t =
+			(z - this.lastZcalculated) /
+			(this.nextZCalculated - this.lastZcalculated);
+		return AnimationManager.lerp(this.grild2D[key], this.nextGrild2D[key], t);
+	}
 
-// }
+	calculateNextGrild2D(z: number) {
+		console.log("calculating next grild for z", z);
+		this.grild2D = this.nextGrild2D;
+		this.lastZcalculated = this.nextZCalculated;
+		this.nextGrild2D = {};
+		this.position.forEach(({ x, y }) => {
+			this.nextGrild2D[`${x},${y}`] = super.get(x, y, z);
+		});
+		this.nextZCalculated = z;
+	}
+}
 
 // export class PerlinNoise2D extends PixelManager {
 // 	private noise: Perlin;
