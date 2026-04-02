@@ -3,7 +3,7 @@ import { Drawable, Position } from "../Managers/PixelManager.js";
 import { ParticleInterface } from "../particle.js";
 
 export default class Star extends Drawable implements ParticleInterface {
-	private maxDepth = 9000;
+	private maxDepth = 3000;
 	private minDepth = 500;
 	private margin = 10;
 	maxAmmount: number = 100;

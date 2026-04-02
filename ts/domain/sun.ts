@@ -46,7 +46,7 @@ export class Sun extends Drawable implements ParticleInterface {
 	}
 
 	updateSize(size: number) {
-		size = Math.max(10, size); // Minimum size to prevent disappearing
+		// size = Math.max(10, size); // Minimum size to prevent disappearing
 		size = Math.min(size, 2048); // Maximum size to prevent excessive growth
 
 		super.updateSize(size);

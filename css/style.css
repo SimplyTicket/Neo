@@ -78,6 +78,10 @@ a {
 	width: max-content;
 }
 
+.light {
+	color: rgba(233, 227, 227, 0.591);
+}
+
 .rounded-1 {
 	border-radius: 5px;
 }

@@ -5,7 +5,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta
 			http-equiv="Content-Security-Policy"
-			content="default-src 'self'; style-src 'self' 'unsafe-inline' data:; img-src 'self' https://ghostk.id https://francophonering.neocities.org; script-src 'self' https://francophonering.neocities.org; font-src 'self' https://fonts.gstatic.com;"
+			content="default-src 'self'; style-src 'self' 'unsafe-inline' data:; img-src 'self' https://ghostk.id https://francophonering.neocities.org https://moods.imood.com; script-src 'self' https://francophonering.neocities.org; font-src 'self' https://fonts.gstatic.com;"
 		/>
 		<title>The web site of simply-ticket</title>
 		<!-- The style.css file allows you to change the look of your web pages.
@@ -60,7 +60,18 @@
 			<div class="row g-3">
 				<div class="col-12 col-md-4 d-flex">
 					<div class="cool-border bg-dark-50 align-self-stretch p-2">
-						<h3 class="ms-2">What am I ?</h3>
+						<div class="d-flex justify-content-between align-items-center">
+							<h3 class="ms-2">What am I ?</h3>
+							<div>
+								<a href="https://www.imood.com/users/Ticket"
+									><img
+										src="https://moods.imood.com/display/uname-Ticket/fg-e9e3e3/trans-1/imood.gif"
+										alt="The current mood of Ticket at www.imood.com"
+										border="0"
+								/></a>
+								<br />
+							</div>
+						</div>
 						<p>
 							It's a hard question, honestly... <br />
 							I'm calculateAge("21-12-2003")
@@ -89,7 +100,8 @@
 								A place where i can also feel like home, I can feel safe, just
 								chilling alone floating peacefully in space, <br />
 								And where i can makes mistakes and don'ty have any one saying
-								anything to me :p
+								anything to me :p <br />
+								<span class="light">(This site is phone compatible and should work on any display size, i know is rare around here :o)</span>
 							</p>
 						</div>
 						<div>
@@ -187,19 +199,23 @@
 						My NeoCities profile
 					</a>
 				</div>
-				<div circlePos="2"
+				<div
+					circlePos="2"
 					class="d-flex align-items-center justify-content-center"
 				>
-					<div id="francophonering">
-						<script
-							type="text/javascript"
-							src="https://francophonering.neocities.org/onionring-variables.js"
-						></script>
-						<script
-							type="text/javascript"
-							src="https://francophonering.neocities.org/onionring-widget.js"
-						></script>
+					<div class="p-2 rounded-1 bg-back-50">
+						<div id="francophonering">
+							<script
+								type="text/javascript"
+								src="https://francophonering.neocities.org/onionring-variables.js"
+							></script>
+							<script
+								type="text/javascript"
+								src="https://francophonering.neocities.org/onionring-widget.js"
+							></script>
+						</div>
 					</div>
+					,j!
 				</div>
 				<div
 					circlePos="3"
@@ -256,9 +272,15 @@
 						/>
 					</div>
 				</div>
-				<div circlePos="4" href=""></div>
-				<div circlePos="5" href=""></div>
-				<div circlePos="6" href=""></div>
+				<div	circlePos="4"	class="d-flex align-items-center justify-content-center"	href="">
+					<div class="p-2 rounded-1 bg-back-50">Nothing for now</div>
+				</div>
+				<div circlePos="5" class="d-flex align-items-center justify-content-center" href="">
+					<div class="p-2 rounded-1 bg-back-50">Nothing for now</div>
+				</div>
+				<div circlePos="6" class="d-flex align-items-center justify-content-center" href="">
+					<div class="p-2 rounded-1 bg-back-50">Nothing for now</div>
+				</div>
 			</div>
 		</div>
 
@@ -270,10 +292,26 @@
 			<div class="row pt-5">
 				<div class="col-12 col-md-3">
 					<h1>Release Notes</h1>
-					<div>Last update: <span id="last-release-date">2026-01-04</span></div>
+					<div>Last update: <span id="last-release-date">2026-02-04</span></div>
 				</div>
 				<div class="col-12 col-md-9">
-					<div class="cool-border bg-dark-50 align-self-stretch w-stretch p-2">
+					<div class="cool-border bg-dark-50 my-2 align-self-stretch p-2">
+						<div id="release">
+							<h3 class="ms-2">
+								<span id="release-title"
+									>v0.1.1 : Francophone Ring acceptance + Imood</span
+								>
+								- <span id="release-date">2026-02-04</span>
+							</h3>
+							<p id="release-description">
+								Just a small update to add the francophone ring and my imood widget, I'm still waitging of the online webring to accept ;) <br />
+								I don't know what i should do next maybe rework a bit the landing page and add a gust book or something.
+							</p>
+							<p>PLS take care of you &#60;3</p>
+						</div>
+					</div>
+
+					<div class="cool-border bg-dark-50 my-2 align-self-stretch p-2">
 						<div id="release">
 							<h3 class="ms-2">
 								<span id="release-title"
@@ -305,6 +343,5 @@
 
 		<div id="particulContainer"></div>
 	</body>
-	<!-- Si ton fichier est dans `/js/main.js` : -->
 	<script type="module" src="/ts/main.ts"></script>
 </html>

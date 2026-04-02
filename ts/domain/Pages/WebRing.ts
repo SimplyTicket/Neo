@@ -12,6 +12,9 @@ import AnimationManager, {
 } from "../Managers/AnnimationManager.js";
 
 export default class WebRing extends PageAbstract {
+
+	suns: Sun[] = [];
+
 	pageName: string = "WebRing";
 	camPosition: Position = { x: -5000, y: 5000, z: 20 };
 
@@ -49,7 +52,7 @@ export default class WebRing extends PageAbstract {
 
 	}
 
-	getPositionForLink(link: Element, raduisMult: number = 1): { x: number; y: number } {
+	getPositionForLink(link: Element, radiusMult: number = 1): { x: number; y: number } {
 		// is on small device, put links in a square list
 		// if (window.innerWidth < 600) {
 		// 	const index = link.getAttribute("circlePos")
@@ -71,8 +74,8 @@ export default class WebRing extends PageAbstract {
 			: this.division;
 		const angle =
 			((360 / this.division) * div + this.degOffset) * (Math.PI / 180);
-		const x = this.centerX + this.radius * raduisMult * Math.cos(angle);
-		const y = this.centerY + this.radius * raduisMult * Math.sin(angle);
+		const x = this.centerX + this.radius * radiusMult * Math.cos(angle);
+		const y = this.centerY + this.radius * radiusMult * Math.sin(angle);
 		return { x, y };
 	}
 
@@ -107,6 +110,7 @@ export default class WebRing extends PageAbstract {
 
 		links.forEach((link, index) => {
 			const sun = new Sun(25);
+
 			sun.disableCameraEffect();
 			const rect = link.getBoundingClientRect();
 			const position = PixelManager.getPositionFromRealPosition({
@@ -134,10 +138,31 @@ export default class WebRing extends PageAbstract {
 			});
 
 			this.prticulManager!.addParticle(sun);
+			this.suns.push(sun);
 		});
 	}
 
+	beforeTearDown(): Promise<void> {
+
+		this.suns.forEach((sun) => {
+			this.annim.animate(2500, new EaseInOutEasing(), (t) => {
+				sun.updateSize(AnimationManager.lerp(sun.getSize(), 0, t));
+			})
+		});
+
+		const linkContainer = document.getElementById("link-container");
+
+		const links = linkContainer ? linkContainer.querySelectorAll("[circlePos]") : [];
+
+		links.forEach((link) => {
+			link.classList.add("opacity-0");
+		});
+		return super.beforeTearDown();
+	}
+
 	async afterTearDown(): Promise<void> {
+		this.suns = [];
+
 		if (this.prticulManager) {
 			canvasParticulManager
 				.getInstance()
