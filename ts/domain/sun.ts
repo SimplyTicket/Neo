@@ -106,9 +106,11 @@ export class Sun extends Drawable implements ParticleInterface {
 	getTemperature(position: { x: number; y: number }): number {
 		const detail = 4; // nombre de "cellules" de bruit visibles sur le soleil
 
+		const sunCenter = this.getPosition();
+
 		const positionRelativeToCenter = {
-			x: position.x - this.getCanvasWidth() / 2,
-			y: position.y - this.getCanvasHeight() / 2,
+			x: position.x - sunCenter.x,
+			y: position.y - sunCenter.y,
 		};
 
 		const noiseValue = this.noise.get(
