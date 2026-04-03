@@ -12,7 +12,7 @@ const Pages = new Map<string, PageAbstract>([
 
 export default class PageManager {
 	private static instance: PageManager;
-	private currentPage: string = "";
+	private currentPage: string = "home";
 
 	private constructor() {
 

@@ -11,12 +11,7 @@ import CameraManager from "./domain/Managers/CameraManager.js";
 import PixelManager from "./domain/Managers/PixelManager.js";
 import PageManager from "./domain/Managers/PageManager.js";
 
-document.onreadystatechange = () => {
-	console.log(document.readyState);
-	if (document.readyState === "complete") {
-		main();
-	}
-};
+document.addEventListener("DOMContentLoaded", main)
 
 let lastTime = 0;
 let frameCount = 0;
