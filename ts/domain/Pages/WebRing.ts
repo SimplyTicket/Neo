@@ -1,15 +1,14 @@
-import { link } from "node:fs";
 import PixelManager, { Position } from "../Managers/PixelManager.js";
 import PageAbstract from "./PageAbstract.js";
 import { Sun } from "../sun.js";
 
 import {
 	canvasManager,
-	canvasParticulManager,
-} from "../canvasParticulManager.js";
+	canvasParticleManager,
+} from "../canvasParticleManager.js";
 import AnimationManager, {
 	EaseInOutEasing,
-} from "../Managers/AnnimationManager.js";
+} from "../Managers/AnimationManager.js";
 
 export default class WebRing extends PageAbstract {
 
@@ -106,7 +105,7 @@ export default class WebRing extends PageAbstract {
 		}
 
 		this.prticulManager = new canvasManager("link-stars", 120);
-		canvasParticulManager.getInstance().addCanvasManager(this.prticulManager);
+		canvasParticleManager.getInstance().addCanvasManager(this.prticulManager);
 
 		links.forEach((link, index) => {
 			const sun = new Sun(25);
@@ -164,7 +163,7 @@ export default class WebRing extends PageAbstract {
 		this.suns = [];
 
 		if (this.prticulManager) {
-			canvasParticulManager
+			canvasParticleManager
 				.getInstance()
 				.removeCanvasManager(this.prticulManager);
 			this.prticulManager = undefined;

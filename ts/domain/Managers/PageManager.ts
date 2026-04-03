@@ -12,18 +12,19 @@ const Pages = new Map<string, PageAbstract>([
 
 export default class PageManager {
 	private static instance: PageManager;
-	private currentPage: string = "home";
+	private currentPage: string = "";
 
 	private constructor() {
 
 		const pageULR = window.location.href.split("#")[1];
 
 		if (pageULR) {
-			this.switchPage(pageULR);
+			this.currentPage = pageULR;
 		} else {
-			this.switchPage(this.currentPage);
 			window.history.replaceState(null, "", `#${this.currentPage}`);
 		}
+
+		this.pageInit();
 
 		const links = document.querySelectorAll("a[dest]");
 		links.forEach((link) => {
@@ -65,6 +66,16 @@ export default class PageManager {
 		oldPageInstance.hide();
 		newPageInstance.show();
 
+	}
+
+	async pageInit(): Promise<void> {
+		const pageInstance = Pages.get(this.currentPage);
+		if (!pageInstance) {
+			throw new Error(`Page "${this.currentPage}" not found.`);
+		}
+		await pageInstance.beforeSwitch();
+		await pageInstance.show();
+		await pageInstance.afterSwitch();
 	}
 
 	async switchPage(pageName: string): Promise<void> {

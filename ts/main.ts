@@ -1,18 +1,22 @@
-import { ParticulManager } from "./domain/particulManager.js";
 import {
 	canvasManager,
-	canvasParticulManager,
-} from "./domain/canvasParticulManager.js";
+	canvasParticleManager,
+} from "./domain/canvasParticleManager.js";
 import { Sun } from "./domain/sun.js";
 import AnimationManager, {
 	EaseInOutEasing,
 	LinearEasing,
-} from "./domain/Managers/AnnimationManager.js";
+} from "./domain/Managers/AnimationManager.js";
 import CameraManager from "./domain/Managers/CameraManager.js";
 import PixelManager from "./domain/Managers/PixelManager.js";
 import PageManager from "./domain/Managers/PageManager.js";
 
-document.addEventListener("DOMContentLoaded", main);
+document.onreadystatechange = () => {
+	console.log(document.readyState);
+	if (document.readyState === "interactive") {
+	}
+};
+main();
 
 let lastTime = 0;
 let frameCount = 0;
@@ -29,44 +33,42 @@ const camera = CameraManager.getInstance();
 
 sunCanvas.addParticle(sunInstance);
 sunCanvas.addParticle(sunInstance2);
-camera.addParticul(sunInstance);
-camera.addParticul(sunInstance2);
+camera.addParticle(sunInstance);
+camera.addParticle(sunInstance2);
 camera.updateBasePosition(sunInstance2, {
-	x: sunInstance.getCanvasWidth() / 2,
-	y: sunInstance2.getCanvasHeight() / 2 + 20,
+	x: sunInstance.getCanvasWidth() / 4,
+	y: sunInstance2.getCanvasHeight() / 4,
 	z: 20,
 });
-camera.updateBasePosition( sunInstance, {
-	x: sunInstance.getCanvasWidth() / 2,
-	y: sunInstance.getCanvasHeight() / 2,
-	z: 0,
-});
+// camera.updateBasePosition( sunInstance, {
+// 	x: sunInstance.getCanvasWidth() / 2,
+// 	y: sunInstance.getCanvasHeight() / 2,
+// 	z: 0,
+// });
 camera.updatePixelManagersZoom()
 
 function main() {
+	console.log('App started')
 
 	// PreBoot tasks
 	PageManager.getInstance();
 
-	// Initialize the annimation loop
+	// Initialize the animation loop
 	window.requestAnimationFrame(animate);
 
-
-	canvasParticulManager.getInstance().addStars();
-
-	// test();
+	canvasParticleManager.getInstance().addStars();
 }
 
 function animate(currentTime: number) {
-	// Update all particles managed by ParticulManager
-	// ParticulManager.getInstance().update();
+	// Update all particles managed by ParticleManager
+	// ParticleManager.getInstance().update();
 
 	if (frameCount++ < 30 && DEBUG) {
-		const particulAmmount = canvasParticulManager
+		const particleAmount = canvasParticleManager
 			.getInstance()
-			.getParticuls().length;
+			.getParticles().length;
 		document.getElementById("frameRate")!.textContent =
-			`FPS: ${Math.round(1 / ((currentTime - lastTime) / 1000))} | Particuls: ${particulAmmount}`;
+			`FPS: ${Math.round(1 / ((currentTime - lastTime) / 1000))} | Particles: ${particleAmount}`;
 		frameCount = 0;
 	}
 
@@ -74,17 +76,52 @@ function animate(currentTime: number) {
 	if (lastTime === 0) lastTime = currentTime;
 	const deltaTime = (currentTime - lastTime) / 1000;
 	lastTime = currentTime;
-	// Draw all particles managed by ParticulManager
-	// ParticulManager.getInstance().draw(deltaTime);
-	canvasParticulManager.getInstance().draw(deltaTime);
-	sunCanvas.draw(deltaTime);
 
-	// sunInstance.draw(deltaTime);
-	// sunInstance2.draw(deltaTime)
+	// Draw all particles managed by ParticleManager
+	// ParticleManager.getInstance().draw(deltaTime);
+	canvasParticleManager.getInstance().draw(deltaTime);
+	sunCanvas.draw(deltaTime);
 
 	// Request the next animation frame
 	window.requestAnimationFrame(animate);
 }
+
+let offsetPosition = { x: 0, y: 0 };
+addEventListener('mousemove', (e) => {
+	const mousePosition = PixelManager.getPositionFromRealPosition({
+		x: e.clientX,
+		y: e.clientY,
+	});
+
+	const sunInstance = CameraManager.getInstance().getAllElements().find((element) => element instanceof Sun) as Sun;
+	const height = sunInstance.getCanvasHeight();
+	const width = sunInstance.getCanvasWidth();
+
+	const center = {
+		x: width / 2,
+		y: height / 2,
+	};
+
+	const currentCamPos = CameraManager.getInstance().getCameraPosition();
+
+	const camBasePosition = {
+		x: currentCamPos.x - offsetPosition.x,
+		y: currentCamPos.y - offsetPosition.y,
+		z: currentCamPos.z
+	};
+
+	offsetPosition = {
+		x: (mousePosition.x - center.x) * 0.5,
+		y: (mousePosition.y - center.y) * 0.5,
+	};
+
+
+	camera.setCameraPosition({
+		x: camBasePosition.x + offsetPosition.x,
+		y: camBasePosition.y + offsetPosition.y,
+		z: camBasePosition.z,
+	});
+});
 
 function testCamera() {
 	const annim = new AnimationManager();
@@ -130,7 +167,7 @@ function testCamera() {
 	document.addEventListener("scroll", (event) => {
 		const scroolDiff = window.scrollY - lastScrollY;
 
-		camera.mooveCamera({ x: 0, y: scroolDiff * 3, z: NaN });
+		camera.moveCamera({ x: 0, y: scroolDiff * 3, z: NaN });
 		lastScrollY = window.scrollY;
 	});
 

@@ -1,4 +1,4 @@
-import AnimationManager from "../Managers/AnnimationManager.js";
+import AnimationManager from "../Managers/AnimationManager.js";
 import PixelManager, { Position, sleep } from "../Managers/PixelManager.js";
 
 export default class Perlin {

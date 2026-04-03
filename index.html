@@ -33,6 +33,7 @@
 			media="all"
 		/>
 		<link rel="stylesheet" href="css/particules/star.css" />
+		<script type="module" src="/ts/main.ts"></script>
 	</head>
 	<body>
 		<nav>
@@ -160,8 +161,8 @@
 							<p class="mb-0 display-none"></p>
 						</div>
 						<div class="d-flex justify-content-between col-12">
-							<button class="moove-btn" id="previous">◄ Previous</button>
-							<button class="moove-btn" id="next">Next ►</button>
+							<button class="move-btn" id="previous">◄ Previous</button>
+							<button class="move-btn" id="next">Next ►</button>
 						</div>
 					</div>
 				</div>
@@ -215,7 +216,6 @@
 							></script>
 						</div>
 					</div>
-					,j!
 				</div>
 				<div
 					circlePos="3"
@@ -341,7 +341,6 @@
 		<canvas class="relative" id="starBg" width="" height=""></canvas>
 		<canvas class="relative" id="link-stars" width="" height=""></canvas>
 
-		<div id="particulContainer"></div>
+		<div id="particleContainer"></div>
 	</body>
-	<script type="module" src="/ts/main.ts"></script>
 </html>

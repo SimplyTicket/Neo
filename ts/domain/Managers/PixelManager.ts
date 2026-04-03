@@ -76,8 +76,8 @@ export default abstract class PixelManager implements PixelManagerInterface {
 		this.ctx.fillRect(
 			this.pixelSize * position.x,
 			this.pixelSize * position.y,
-			this.pixelSize,
-			this.pixelSize,
+			this.pixelSize + 1,
+			this.pixelSize + 1,
 		);
 	}
 

@@ -1,7 +1,7 @@
 import { Sun } from "../sun.js";
 import PixelManager, { Drawable, Position } from "./PixelManager.js";
 
-interface listOfParticuls  {
+interface listOfParticles  {
 		baseSize: number;
 		basePosition: Position;
 		pixelManager: Drawable;
@@ -12,7 +12,7 @@ export default class CameraManager {
 	updateBasePosition(element: Drawable, position: Position) {
 		const index = this.getElementIndex(element);
 
-		this.listOfParticuls[index].basePosition = position
+		this.listOfParticles[index].basePosition = position
 		this.updatePixelManagersPosition()
 	}
 
@@ -29,7 +29,7 @@ export default class CameraManager {
 	private static instance: CameraManager;
 	private baseDistance = 10;
 	private position: Position = { x: 0, y: 0, z: this.baseDistance };
-	private listOfParticuls: listOfParticuls[] = [];
+	private listOfParticles: listOfParticles[] = [];
 
 	private constructor() {}
 
@@ -40,11 +40,11 @@ export default class CameraManager {
 		return CameraManager.instance;
 	}
 
-	addParticul(pixelManager: Drawable): void {
+	addParticle(pixelManager: Drawable): void {
 		const baseSize = pixelManager.getSize();
 		const basePosition = pixelManager.getPosition();
-		this.listOfParticuls.push({ baseSize, basePosition, pixelManager });
-		this.listOfParticuls.sort((a: listOfParticuls, b: listOfParticuls) => {
+		this.listOfParticles.push({ baseSize, basePosition, pixelManager });
+		this.listOfParticles.sort((a: listOfParticles, b: listOfParticles) => {
 			return a.pixelManager.getPosition().z - b.pixelManager.getPosition().z;
 		});
 	}
@@ -57,7 +57,7 @@ export default class CameraManager {
 	}
 
 	updatePixelManagersPosition(): void {
-		this.listOfParticuls.forEach(({ basePosition, pixelManager }) => {
+		this.listOfParticles.forEach(({ basePosition, pixelManager }) => {
 			const position = basePosition;
 			const distance = this.getDistanceFromCamera(position);
 			pixelManager.updatePosition({
@@ -69,14 +69,14 @@ export default class CameraManager {
 	}
 
 	closestObject(): Drawable {
-		return this.listOfParticuls[0].pixelManager;
+		return this.listOfParticles[0].pixelManager;
 	}
 
 	furtherObject(): Drawable {
-		return this.listOfParticuls[this.listOfParticuls.length - 1].pixelManager;
+		return this.listOfParticles[this.listOfParticles.length - 1].pixelManager;
 	}
 
-	mooveCameraSoElemIsOn(
+	moveCameraSoElemIsOn(
 		element: Drawable,
 		position: Position,
 		zoomWillBy: number = this.position.z!,
@@ -86,18 +86,18 @@ export default class CameraManager {
 			element.getPosition(),
 			zoomWillBy,
 		);
-		const particul = this.getElement(element);
+		const particle = this.getElement(element);
 
-		if (!particul) throw Error("No element found in the camera");
+		if (!particle) throw Error("No element found in the camera");
 
-		const cameraX = (position.x - particul.basePosition.x) * distance;
-		const cameraY = (position.y - particul.basePosition.y) * distance;
+		const cameraX = (position.x - particle.basePosition.x) * distance;
+		const cameraY = (position.y - particle.basePosition.y) * distance;
 
 		return { x: cameraX, y: cameraY, z: zoomWillBy };
 	}
 
 	updatePixelManagersZoom(): void {
-		this.listOfParticuls.forEach(({ baseSize, pixelManager }) => {
+		this.listOfParticles.forEach(({ baseSize, pixelManager }) => {
 			const newSize =
 				(baseSize * this.baseDistance) /
 				this.getDistanceFromCamera(pixelManager.getPosition());
@@ -105,7 +105,7 @@ export default class CameraManager {
 		});
 	}
 
-	mooveCamera(position: Position): void {
+	moveCamera(position: Position): void {
 		this.position.x += position.x;
 		this.position.y += position.y;
 		this.updatePixelManagersPosition();
@@ -132,19 +132,19 @@ export default class CameraManager {
 		this.updatePixelManagersZoom();
 	}
 
-	getElement(elementTofind: Drawable): listOfParticuls | undefined {
+	getElement(elementTofind: Drawable): listOfParticles | undefined {
 		return this.getElementIndex(elementTofind) !== -1
-			? this.listOfParticuls[this.getElementIndex(elementTofind)]
+			? this.listOfParticles[this.getElementIndex(elementTofind)]
 			: undefined;
 	}
 
 	getElementIndex(elementTofind: Drawable): number {
-		return this.listOfParticuls.findIndex((element) => {
+		return this.listOfParticles.findIndex((element) => {
 			return element.pixelManager == elementTofind;
 		});
 	}
 
 	getAllElements(): Drawable[] {
-		return this.listOfParticuls.map((element) => element.pixelManager);
+		return this.listOfParticles.map((element) => element.pixelManager);
 	}
 };

@@ -11,7 +11,7 @@ body {
 	background-color: #030023;
 	color: rgb(233, 227, 227);
 	/* font-family: "CoralPixels", url("../assets/assets/CoralPixels-Regular.ttf") format("truetype"); */
-	font-family: 'Terminal Grotesque';
+	font-family: 'Terminal Grotesque', system-ui, sans-serif;
 }
 
 .person {
@@ -32,12 +32,7 @@ body {
   border-style: solid;
 }
 
-.cool-border.bg-dark-50::first-letter {
-
-}
-
-
-.moove-btn {
+.move-btn {
 	background-color: transparent;
 	border: none;
 	color: rgb(233, 227, 227);
@@ -92,4 +87,21 @@ a {
 
 .opacity-0 {
 	opacity: 0;
+}
+
+input {
+	background-color: transparent;
+	border: 1px solid rgb(233, 227, 227);
+	color: rgb(233, 227, 227);
+	padding: 5px;
+	border-radius: 5px;
+}
+
+button {
+	background-color: transparent;
+	border: 1px solid rgb(233, 227, 227);
+	color: rgb(233, 227, 227);
+	padding: 5px 10px;
+	border-radius: 5px;
+	cursor: pointer;
 }

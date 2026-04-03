@@ -22,16 +22,15 @@ export class canvasManager {
 	protected ctx: CanvasRenderingContext2D;
 	private particles: Drawable[] = [];
 	private lastTime: number = 0;
-	protected maxParticuls: number;
-	public activParticuls: boolean = true;
+	protected maxParticles: number;
+	public activeParticles: boolean = true;
 	lastFrame: number = 0;
 	private static canvasInstance: canvasManager[] = [];
-	protected static instance: canvasParticulManager;
+	protected static instance: canvasParticleManager;
 
 	constructor(
 		canvasId: string,
 		private frameRate: number = 15,
-
 	) {
 		const canvas = document.getElementById(canvasId) as HTMLCanvasElement;
 		if (!canvas) {
@@ -46,7 +45,7 @@ export class canvasManager {
 		this.canvas.width = window.innerWidth;
 		this.ctx = ctx;
 		this.resize(this.canvas, this.ctx);
-		this.maxParticuls = Math.floor(
+		this.maxParticles = Math.floor(
 			(this.canvas.width * this.canvas.height) / 10000,
 		);
 		addEventListener("resize", () => {
@@ -69,7 +68,7 @@ export class canvasManager {
 		canvas.width = Math.floor(width * dpr);
 		canvas.height = Math.floor(height * dpr);
 
-		this.maxParticuls = Math.floor(
+		this.maxParticles = Math.floor(
 			(this.canvas.width * this.canvas.height) / 10000,
 		);
 
@@ -82,7 +81,7 @@ export class canvasManager {
 		this.particles.push(particle);
 	}
 
-	getParticuls() {
+	getParticles() {
 		return this.particles;
 	}
 
@@ -122,38 +121,38 @@ export class canvasManager {
 		// One new star every 0.1 second
 		// this.timeSinceLastStar = (this.timeSinceLastStar || 0) + dt;
 		// if (
-		// 	this.activParticuls &&
+		// 	this.activeParticles &&
 		// 	this.timeSinceLastStar >= 0.1 &&
-		// 	this.particles.length < this.maxParticuls
+		// 	this.particles.length < this.maxParticles
 		// ) {
 		// 	this.addParticle(new CanvasStar(this, undefined, this.ctx));
 		// 	this.timeSinceLastStar = 0;
 		// }
 	}
 
-	addCanvasManager(particulManager: canvasManager) {
-		canvasManager.canvasInstance.push(particulManager);
+	addCanvasManager(particleManager: canvasManager) {
+		canvasManager.canvasInstance.push(particleManager);
 	}
 
-	removeCanvasManager(particulManager: canvasManager) {
-		const index = canvasManager.canvasInstance.indexOf(particulManager);
+	removeCanvasManager(particleManager: canvasManager) {
+		const index = canvasManager.canvasInstance.indexOf(particleManager);
 		if (index !== -1) {
 			canvasManager.canvasInstance.splice(index, 1);
 		}
 	}
 }
 
-export class canvasParticulManager extends canvasManager{
+export class canvasParticleManager extends canvasManager{
 
-	static getInstance(canvasId: string = "starBg"): canvasParticulManager {
-		if (!canvasParticulManager.instance) {
-			canvasParticulManager.instance = new canvasParticulManager(canvasId);
+	static getInstance(canvasId: string = "starBg"): canvasParticleManager {
+		if (!canvasParticleManager.instance) {
+			canvasParticleManager.instance = new canvasParticleManager(canvasId);
 		}
-		return canvasParticulManager.instance;
+		return canvasParticleManager.instance;
 	}
 
 	addStars() {
-		for (let i = 0; i < this.maxParticuls; i++) {
+		for (let i = 0; i < this.maxParticles; i++) {
 			this.addParticle(new Star(this.ctx, this.canvas, 1));
 		}
 	}

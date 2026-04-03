@@ -1,5 +1,5 @@
 import { Particle } from "./particle.js";
-import { canvasParticulManager, DirectionEnum, DirectionVectors } from "./canvasParticulManager.js";
+import { canvasParticleManager, DirectionEnum, DirectionVectors } from "./canvasParticleManager.js";
 
 export class CanvasStar extends Particle {
 	private velocity: { x: number; y: number } = { x: 0, y: 0 };
@@ -70,13 +70,13 @@ export class CanvasStar extends Particle {
 	private static direction : DirectionEnum = "UP" as DirectionEnum;
 
 	constructor(
-		private particulManager: canvasParticulManager,
+		private particleManager: canvasParticleManager,
 		window: Window = globalThis.window,
 		private ctx: CanvasRenderingContext2D,
 	) {
 		super();
-		CanvasStar.innerHeight = this.particulManager.canvas.height;
-		CanvasStar.innerWidth = this.particulManager.canvas.width;
+		CanvasStar.innerHeight = this.particleManager.canvas.height;
+		CanvasStar.innerWidth = this.particleManager.canvas.width;
 
 		// random annimation speed between 0.1 and 0.3 seconds per frame
 		this.annimationSpeed = 0.1 + Math.random() * 0.2;
@@ -155,12 +155,12 @@ export class CanvasStar extends Particle {
 		});
 	}
 	destroy(): void {
-		this.particulManager.removeParticle(this);
+		this.particleManager.removeParticle(this);
 	}
 
 	softDestroy(): void {
 
-		if (this.particulManager.activParticuls === false) {
+		if (this.particleManager.activParticles === false) {
 			this.destroy();
 			return;
 		}

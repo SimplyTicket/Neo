@@ -1,6 +1,6 @@
 import AnimationManager, {
 	EaseInOutEasing,
-} from "./Managers/AnnimationManager.js";
+} from "./Managers/AnimationManager.js";
 import CameraManager from "./Managers/CameraManager.js";
 import PixelManager, {
 	Drawable,
@@ -98,8 +98,8 @@ export class Sun extends Drawable implements ParticleInterface {
 
 			// b = Math.floor(160 * (1 - Math.max(temperature + Math.random() + 0.2, 1))); // Bleu entre 0 et 10
 		}
-		position.x = Math.floor(position.x);
-		position.y = Math.floor(position.y);
+		position.x = Math.floor(position.x) + (this.position.x - Math.trunc(this.position.x));
+		position.y = Math.floor(position.y) + (this.position.y - Math.trunc(this.position.y));
 		super.drawPixel(position, color);
 	}
 
@@ -149,7 +149,7 @@ export class Sun extends Drawable implements ParticleInterface {
 
 		const originalPosition = { ...camera.getCameraPosition() };
 		const originalCamZ = camera.getZoom();
-		const camPosition = camera.mooveCameraSoElemIsOn(this, position, 30);
+		const camPosition = camera.moveCameraSoElemIsOn(this, position, 30);
 		const targetCamPosition = {
 			x: camPosition.x,
 			y: camPosition.y,

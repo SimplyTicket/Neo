@@ -17,7 +17,7 @@ export default class Star extends Drawable implements ParticleInterface {
 		const position = { x: 0, y: 0, z: 0 };
 		super(ctx, canvas, size, position);
 		this.summon();
-		CameraManager.getInstance().addParticul(this);
+		CameraManager.getInstance().addParticle(this);
 	}
 
 	summon() {
@@ -39,7 +39,7 @@ export default class Star extends Drawable implements ParticleInterface {
 
 	updatePosition(position: Position) {
 
-		// if out of screen, moove it to the other side (with a screen size margin)
+		// if out of screen, move it to the other side (with a screen size margin)
 		if (this.position.x! <  -this.margin) {
 			position.x += this.getCanvasWidth() + this.margin;
 		} else if (this.position.x! > this.getCanvasWidth() + this.margin) {

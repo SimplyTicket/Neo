@@ -1,4 +1,4 @@
-import AnimationManager, { EaseInOutEasing } from "../Managers/AnnimationManager.js";
+import AnimationManager, { EaseInOutEasing } from "../Managers/AnimationManager.js";
 import CameraManager from "../Managers/CameraManager.js";
 import { Position } from "../Managers/PixelManager.js";
 
