@@ -13,10 +13,10 @@ import PageManager from "./domain/Managers/PageManager.js";
 
 document.onreadystatechange = () => {
 	console.log(document.readyState);
-	if (document.readyState === "interactive") {
+	if (document.readyState === "complete") {
+		main();
 	}
 };
-main();
 
 let lastTime = 0;
 let frameCount = 0;
@@ -48,7 +48,6 @@ camera.updateBasePosition(sunInstance2, {
 camera.updatePixelManagersZoom()
 
 function main() {
-	console.log('App started')
 
 	// PreBoot tasks
 	PageManager.getInstance();
@@ -111,8 +110,8 @@ addEventListener('mousemove', (e) => {
 	};
 
 	offsetPosition = {
-		x: (mousePosition.x - center.x) * 0.5,
-		y: (mousePosition.y - center.y) * 0.5,
+		x: (mousePosition.x - center.x) * 0.05,
+		y: (mousePosition.y - center.y) * 0.05,
 	};
 
 
